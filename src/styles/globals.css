@@ -1,0 +1,27 @@
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+:root {
+	--white: #ffffff;
+	--dark: #001524;
+	--green: #226f54;
+	--yellow: #ffb833;
+	--gray: #707070;
+	--red: #a0030b;
+
+	--background: var(--white);
+	--foreground: var(--dark);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: var(--dark);
+		--foreground: var(--white);
+	}
+}
+
+body {
+	background: var(--background);
+	color: var(--foreground);
+	font-family: var(--font-nunito), sans-serif;
+}
