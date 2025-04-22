@@ -24,7 +24,7 @@ const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
 				className={cn(
 					linkButtonVariants(),
 					icon && " gap-2",
-					disabled && "text-[#707070] pointer-events-none",
+					disabled && "text-gray pointer-events-none",
 					className
 				)}
 				href={href}
