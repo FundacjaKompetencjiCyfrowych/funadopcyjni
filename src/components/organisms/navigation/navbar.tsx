@@ -7,6 +7,7 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useWindowSize } from "@react-hook/window-size";
+import Link from "next/link";
 
 const navigation = [
 	{ name: "Aktualności", href: "#", current: true },
@@ -23,7 +24,7 @@ function classNames(
 
 export default function Navbar() {
 	const [width] = useWindowSize();
-	const isMobile = width < 834;
+	const isMobile = width < 768;
 
 	return (
 		<Disclosure as="nav" className="bg-white">
@@ -32,16 +33,18 @@ export default function Navbar() {
 					<div className="mx-auto w-full px-4 sm:px-8 md:px-8 lg:px-16 ">
 						<div className="relative flex h-16 items-center justify-between">
 							<div className="flex shrink-0 items-center gap-2 sm:gap-3">
-								<Image
-									src="/assets/images/logo.png"
-									alt="Logo"
-									width={isMobile ? 36 : 64}
-									height={isMobile ? 36 : 64}
-									className="h-9 w-9 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16"
-								/>
-								<p className="font-nunito text-sm font-semibold text-primary-text sm:text-base md:text-lg lg:text-xl">
-									Fundacja Adopcyjni
-								</p>
+								<Link href="/" className="flex items-center gap-2 sm:gap-3">
+									<Image
+										src="/assets/images/logo.png"
+										alt="Logo"
+										width={isMobile ? 36 : 64}
+										height={isMobile ? 36 : 64}
+										className="h-9 w-9 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16"
+									/>
+									<p className="font-nunito text-sm font-semibold text-primary-text sm:text-base md:text-lg lg:text-xl">
+										Fundacja Adopcyjni
+									</p>
+								</Link>
 							</div>
 
 							<div className="hidden md:ml-6 md:block">
@@ -77,7 +80,7 @@ export default function Navbar() {
 					</div>
 
 					<DisclosurePanel className="md:hidden">
-						<div className="space-y-1 px-4 pb-3 pt-2">
+						<div className="space-y-1 px-4 pb-3 pt-2 flex flex-col justify-center items-center">
 							{navigation.map((item) => (
 								<DisclosureButton
 									key={item.name}
