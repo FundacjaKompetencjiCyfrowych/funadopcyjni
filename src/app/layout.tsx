@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "@/styles/globals.css";
+import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
+import MainCarouselStoryblok from "@/components/storyblok/MainCarouselStoryblok";
 
 const nunito = Nunito({
 	variable: "--font-nunito",
@@ -15,6 +17,14 @@ export const metadata: Metadata = {
 		"Wspieramy rodziny na każdym etapie adopcji, zapewniając spokój i pełne zrozumienie procesu. Razem tworzymy bezpieczne i pełne miłości środowisko, by adopcja przebiegła bez zbędnego stresu.",
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
+
+storyblokInit({
+	accessToken: process.env.STORYBLOK_ACCESS_TOKEN,
+	use: [apiPlugin],
+	components: {
+		main_carousel: MainCarouselStoryblok,
+	},
+});
 
 export default function RootLayout({
 	children,
