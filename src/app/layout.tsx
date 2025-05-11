@@ -3,6 +3,7 @@ import { Nunito } from "next/font/google";
 import "@/styles/globals.css";
 import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
 import MainCarouselStoryblok from "@/components/storyblok/MainCarouselStoryblok";
+import AboutUsStoryblok from "@/components/storyblok/AboutUsStoryblok";
 
 const nunito = Nunito({
 	variable: "--font-nunito",
@@ -23,6 +24,7 @@ storyblokInit({
 	use: [apiPlugin],
 	components: {
 		main_carousel: MainCarouselStoryblok,
+		about_us: AboutUsStoryblok,
 	},
 });
 
