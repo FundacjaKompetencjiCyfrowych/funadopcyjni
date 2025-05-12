@@ -5,6 +5,8 @@ import { ISbStoriesParams } from "@storyblok/react";
 import dynamic from "next/dynamic";
 import { CarouselMain } from "@/components/molecules/Carousel/CarouselMain";
 import { AboutUs } from "@/components/molecules/AboutUs";
+import { HowWeHelp } from "@/components/molecules/HowWeHelp";
+import { MakeDonation } from "@/components/molecules/MakeDonation";
 
 const StoryblokComponent = dynamic(() =>
 	import("@storyblok/react").then((mod) => mod.StoryblokComponent)
@@ -94,6 +96,10 @@ export default async function Home() {
 					<AboutUs blok={testAboutUsData} />
 				</div>
 			)}
+
+			<HowWeHelp />
+
+			<MakeDonation />
 
 			<div className="container mx-auto p-4 mt-8 bg-gray-100 rounded">
 				<h2 className="text-lg font-bold mb-2">Debug Storyblok Data:</h2>

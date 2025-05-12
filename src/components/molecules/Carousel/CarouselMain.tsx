@@ -91,19 +91,19 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 		<div
 			{...storyblokEditable(blok)}
 			className={cn(
-				"relative w-full max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16",
+				"relative w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 max-h-[524px]",
 				className
 			)}
 		>
 			<div
-				className="overflow-hidden rounded-none md:rounded-2xl"
+				className="overflow-hidden rounded-none md:rounded-2xl h-full"
 				ref={emblaRef}
 			>
 				<div className="flex h-full">
 					{slides.map((slide, index) => (
 						<div className="relative flex min-w-full" key={index}>
 							<div className="flex w-full flex-col md:flex-row">
-								<div className="relative h-64 w-full md:hidden">
+								<div className="relative w-full md:hidden">
 									<Image
 										src={slide.image.filename}
 										alt={slide.image.alt || slide.title}
