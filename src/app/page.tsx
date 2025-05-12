@@ -7,6 +7,9 @@ import { CarouselMain } from "@/components/molecules/Carousel/CarouselMain";
 import { AboutUs } from "@/components/molecules/AboutUs";
 import { HowWeHelp } from "@/components/molecules/HowWeHelp";
 import { MakeDonation } from "@/components/molecules/MakeDonation";
+import { HowYouCanHelp } from "@/components/molecules/HowYouCanHelp";
+import { TheySupport } from "@/components/molecules/TheySupport";
+import { Footer } from "@/components/molecules/Footer";
 
 const StoryblokComponent = dynamic(() =>
 	import("@storyblok/react").then((mod) => mod.StoryblokComponent)
@@ -101,6 +104,10 @@ export default async function Home() {
 
 			<MakeDonation />
 
+			<HowYouCanHelp />
+
+			<TheySupport />
+
 			<div className="container mx-auto p-4 mt-8 bg-gray-100 rounded">
 				<h2 className="text-lg font-bold mb-2">Debug Storyblok Data:</h2>
 				<div className="grid grid-cols-1 gap-4">
@@ -155,6 +162,8 @@ export default async function Home() {
 			{storyblokData && storyblokData.data && storyblokData.data.story && (
 				<StoryblokComponent blok={storyblokData.data.story.content} />
 			)}
+
+			<Footer />
 		</>
 	);
 }
