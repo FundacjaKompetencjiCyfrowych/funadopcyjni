@@ -114,7 +114,7 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 									<div className="absolute inset-0 rounded-t-2xl bg-black/30" />
 								</div>
 
-								<div className="flex w-full flex-col justify-end items-center gap-8 h-[295px] md:h-[524px] rounded-b-2xl bg-text-dark px-6 pt-6 pb-8 md:w-[493px] md:rounded-l-2xl md:rounded-r-none md:justify-center md:gap-8 md:px-6 md:pt-6 md:pb-8 lg:gap-12 lg:px-10 lg:pt-6 lg:pb-8">
+								<div className="flex w-full flex-col justify-end items-center gap-8 h-[295px] md:h-[524px] rounded-b-2xl bg-text-dark px-6 pt-6 pb-8 md:w-[493px] md:rounded-l-2xl md:rounded-r-none md:justify-center md:gap-8 lg:gap-12 lg:px-10">
 									<div className="flex flex-col gap-6 w-full max-w-[313px] md:w-[304px] lg:w-[420px]">
 										<h2 className="font-open-sans font-semibold text-white text-2xl md:text-[32px] md:leading-[38.4px] lg:text-[32px] lg:leading-[38.4px]">
 											{slide.title}
@@ -152,7 +152,7 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 				</div>
 			</div>
 
-			<div className="mt-0 px-4 py-4 md:mt-6 md:px-0 md:py-0 flex flex-row items-center justify-between md:justify-center md:relative md:flex-row md:space-y-0">
+			<div className="mt-0 px-4 py-4 md:mt-6 md:px-0 md:py-0 flex items-center justify-between md:justify-center md:relative">
 				<div className="flex justify-center items-center space-x-2 md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
 					{slides.map((_, index) => (
 						<button

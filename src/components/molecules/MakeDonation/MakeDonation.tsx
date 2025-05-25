@@ -46,15 +46,15 @@ const MakeDonation = ({
 				<div className="hidden md:flex flex-row">
 					<div className="w-full md:w-1/2 bg-primary py-6 px-4 md:py-8 md:px-8 lg:py-12 lg:px-16">
 						<div className="w-full max-w-[528px] md:max-w-[369px] lg:max-w-[528px] mx-auto md:ml-0">
-							<div className="flex flex-col gap-4 md:gap-4 lg:gap-6">
+							<div className="flex flex-col gap-4 lg:gap-6">
 								<h2 className="text-2xl md:text-[32px] lg:text-5xl font-semibold text-center font-open-sans md:leading-[38px] lg:leading-normal">
 									{title}
 								</h2>
-								<p className="text-lg md:text-lg lg:text-xl text-center md:text-left lg:text-center font-bold md:font-bold lg:font-semibold font-nunito">
+								<p className="text-lg lg:text-xl text-center md:text-left lg:text-center font-bold lg:font-semibold font-nunito">
 									{subtitle}
 								</p>
-								<div className="bg-light-background p-4 md:p-4 lg:p-6 rounded-3xl">
-									<div className="flex flex-col gap-2 md:gap-2 lg:gap-2">
+								<div className="bg-light-background p-4 lg:p-6 rounded-3xl">
+									<div className="flex flex-col gap-2">
 										<p className="font-nunito text-sm md:text-lg lg:text-base">
 											<span className="font-bold">Tytuł:</span> Darowizna na
 											cele statutowe
