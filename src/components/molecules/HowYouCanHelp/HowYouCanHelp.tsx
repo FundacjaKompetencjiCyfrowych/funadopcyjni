@@ -34,7 +34,7 @@ const HowYouCanHelp = ({
 	items = defaultItems,
 }: HowYouCanHelpProps) => {
 	return (
-		<section className="w-full bg-[#FFF8EB]">
+		<section className="w-full bg-light-background">
 			<div className="py-12 px-4 md:px-8 lg:px-16 max-w-[1440px] mx-auto">
 				<div className="flex flex-col items-center gap-12">
 					<h2 className="text-3xl font-semibold text-center">{title}</h2>

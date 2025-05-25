@@ -4,8 +4,8 @@ import React, { useCallback, useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { storyblokEditable } from "@storyblok/react";
+import { Button } from "@/components/atoms";
 
 interface CarouselSlide {
 	image: {
@@ -114,39 +114,27 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 									<div className="absolute inset-0 rounded-t-2xl bg-black/30" />
 								</div>
 
-								<div className="flex w-full flex-col justify-center space-y-6 rounded-b-2xl bg-black p-6 md:w-2/5 md:rounded-l-2xl md:rounded-r-none md:p-8 lg:space-y-8 lg:p-10">
-									<div className="space-y-6">
-										<h2 className="font-heading text-xl font-semibold text-white sm:text-2xl md:text-3xl">
+								<div className="flex w-full flex-col justify-center gap-12 rounded-b-2xl bg-text-dark p-6 md:w-[493px] md:h-[524px] md:rounded-l-2xl md:rounded-r-none md:p-6 md:pl-10 md:pb-8">
+									<div className="flex flex-col gap-6">
+										<h2 className="font-open-sans font-semibold text-white text-2xl md:text-[32px] md:leading-[38.4px]">
 											{slide.title}
 										</h2>
-										<p className="text-sm text-white/90 sm:text-base md:text-lg">
+										<p className="text-white font-nunito text-base leading-6">
 											{slide.description}
 										</p>
 									</div>
 									<div>
-										<Link
-											href={slide.link.url}
-											className="inline-flex items-center rounded-full bg-yellow-400 px-6 py-3 font-medium text-black hover:bg-yellow-500"
+										<Button
+											variant="carousel"
+											icon={true}
+											onClick={() => (window.location.href = slide.link.url)}
 										>
 											{slide.buttonText}
-											<svg
-												className="ml-2 h-4 w-4"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
-											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth={2}
-													d="M14 5l7 7m0 0l-7 7m7-7H3"
-												/>
-											</svg>
-										</Link>
+										</Button>
 									</div>
 								</div>
 
-								<div className="hidden md:block md:w-3/5">
+								<div className="hidden md:block md:w-full">
 									<div className="relative h-full w-full">
 										<Image
 											src={slide.image.filename}
@@ -163,25 +151,25 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 					))}
 				</div>
 			</div>
-			<div className="mt-6 flex flex-col items-center justify-center space-y-4 md:flex-row md:justify-between md:space-y-0 md:px-8">
-				<div className="flex justify-center space-x-2 md:justify-start md:order-1">
+			<div className="mt-6 relative flex flex-col items-center justify-center space-y-4 md:space-y-0 md:px-8">
+				<div className="flex justify-center items-center space-x-2">
 					{slides.map((_, index) => (
 						<button
 							key={index}
 							onClick={() => emblaApi?.scrollTo(index)}
 							className={cn(
-								"h-1 w-8 rounded transition-all",
-								index === selectedIndex ? "bg-yellow-400" : "bg-gray-300"
+								"h-[5px] w-8 rounded transition-all",
+								index === selectedIndex ? "bg-primary" : "bg-gray-medium"
 							)}
 							aria-label={`Go to slide ${index + 1}`}
 						/>
 					))}
 				</div>
 
-				<div className="flex space-x-6 md:order-2">
+				<div className="flex space-x-6 md:absolute md:right-0 md:top-0">
 					<button
 						onClick={scrollPrev}
-						className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 text-black hover:bg-yellow-500"
+						className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-black hover:bg-primary-hover"
 						aria-label="Previous slide"
 					>
 						<svg
@@ -200,7 +188,7 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 					</button>
 					<button
 						onClick={scrollNext}
-						className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 text-black hover:bg-yellow-500"
+						className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-black hover:bg-primary-hover"
 						aria-label="Next slide"
 					>
 						<svg

@@ -66,7 +66,7 @@ export default function Navbar() {
 							</div>
 
 							<div className="absolute inset-y-0 right-0 flex items-center md:hidden">
-								<DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-primary-text hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary">
+								<DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-primary-text hover:bg-gray-light focus:outline-none focus:ring-2 focus:ring-primary">
 									<span className="absolute -inset-0.5" />
 									<span className="sr-only">Otwórz menu</span>
 									{open ? (

@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Nunito, Open_Sans } from "next/font/google";
 import "@/styles/globals.css";
 import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
 import MainCarouselStoryblok from "@/components/storyblok/MainCarouselStoryblok";
 import AboutUsStoryblok from "@/components/storyblok/AboutUsStoryblok";
+import NewsStoryblok from "@/components/storyblok/NewsStoryblok";
 
 const nunito = Nunito({
 	variable: "--font-nunito",
+	subsets: ["latin"],
+	weight: ["400", "500", "600", "700"],
+	display: "swap",
+});
+
+const openSans = Open_Sans({
+	variable: "--font-open-sans",
 	subsets: ["latin"],
 	weight: ["400", "500", "600", "700"],
 	display: "swap",
@@ -25,6 +33,7 @@ storyblokInit({
 	components: {
 		main_carousel: MainCarouselStoryblok,
 		about_us: AboutUsStoryblok,
+		news_section: NewsStoryblok,
 	},
 });
 
@@ -34,7 +43,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="pl" className={nunito.variable}>
+		<html lang="pl" className={`${nunito.variable} ${openSans.variable}`}>
 			<body className="font-sans antialiased">{children}</body>
 		</html>
 	);

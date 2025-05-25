@@ -24,7 +24,7 @@ const MakeDonation = ({
 							<p className="text-xl mb-8 text-center font-semibold">
 								{subtitle}
 							</p>
-							<div className="bg-[#FFF8EB] p-6 rounded-3xl ">
+							<div className="bg-light-background p-6 rounded-3xl ">
 								<div className="flex flex-col gap-2">
 									<p>
 										<span className="font-bold">Tytuł:</span> Darowizna na cele

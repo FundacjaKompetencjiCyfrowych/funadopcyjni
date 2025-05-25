@@ -10,6 +10,7 @@ import { MakeDonation } from "@/components/molecules/MakeDonation";
 import { HowYouCanHelp } from "@/components/molecules/HowYouCanHelp";
 import { TheySupport } from "@/components/molecules/TheySupport";
 import { Footer } from "@/components/molecules/Footer";
+import { News } from "@/components/molecules/News";
 
 const StoryblokComponent = dynamic(() =>
 	import("@storyblok/react").then((mod) => mod.StoryblokComponent)
@@ -36,14 +37,6 @@ async function fetchData() {
 
 export default async function Home() {
 	const storyblokData = await fetchData();
-	console.log("Dane strony głównej ze Storyblok:", storyblokData?.data);
-
-	const bodyBlocks = storyblokData?.data?.story?.content?.body || [];
-	console.log("Wszystkie bloki w body:", bodyBlocks);
-	console.log(
-		"Typy komponentów:",
-		bodyBlocks.map((blok: StoryblokBlock) => blok.component)
-	);
 
 	const carouselComponent = storyblokData?.data?.story?.content?.body?.find(
 		(blok: StoryblokBlock) => blok.component === "main_carousel"
@@ -52,23 +45,6 @@ export default async function Home() {
 	const aboutUsComponent = storyblokData?.data?.story?.content?.body?.find(
 		(blok: StoryblokBlock) => blok.component === "about_us"
 	);
-
-	console.log("Znaleziony komponent karuzeli:", carouselComponent);
-	console.log("Znaleziony komponent o nas:", aboutUsComponent);
-
-	if (aboutUsComponent) {
-		console.log("Dane komponentu about_us:", aboutUsComponent);
-		console.log(
-			"Typy danych w about_us:",
-			Object.keys(aboutUsComponent).map(
-				(key) => `${key}: ${typeof aboutUsComponent[key]}`
-			)
-		);
-	} else {
-		console.log(
-			"Komponent about_us nie został znaleziony - sprawdź nazwę techniczną w Storyblok"
-		);
-	}
 
 	const testAboutUsData = {
 		_uid: "test-uid",
@@ -82,6 +58,93 @@ export default async function Home() {
 		},
 	};
 
+	const newsComponent = storyblokData?.data?.story?.content?.body?.find(
+		(blok: StoryblokBlock) => blok.component === "news_section"
+	);
+
+	// Dane testowe dla komponentu News (użyte, gdy nie ma danych ze Storyblok)
+	const testNewsData = {
+		_uid: "test-news-uid",
+		component: "news_section",
+		articles: [
+			{
+				_uid: "news-1",
+				component: "article",
+				title: "Wsparcie psychologiczne dla rodzin adopcyjnych",
+				content:
+					"Profesjonalna pomoc psychologiczna może być nieoceniona zarówno dla rodziców, jak i dla dzieci. Fundacja Adopcyjni oferuje kompleksowe wsparcie na każdym etapie.",
+				image: {
+					filename:
+						"https://a.storyblok.com/f/236278/1200x800/eb89f8f27a/about_us.jpg",
+					alt: "Wsparcie psychologiczne",
+				},
+				tags: ["PSYCHOLOGIA", "ROZWÓJ DZIECKA"],
+				article_number: 1,
+				publish_date: "2023-05-15",
+			},
+			{
+				_uid: "news-2",
+				component: "article",
+				title: "Warsztaty dla rodziców adopcyjnych - nowe terminy",
+				content:
+					"Zapraszamy na cykl warsztatów dla rodziców adopcyjnych, które odbędą się w najbliższych miesiącach. Podczas spotkań będziemy poruszać tematy związane z budowaniem więzi.",
+				image: {
+					filename:
+						"https://a.storyblok.com/f/236278/1200x800/eb89f8f27a/about_us.jpg",
+					alt: "Warsztaty dla rodziców",
+				},
+				tags: ["EDUKACJA", "WYDARZENIA"],
+				article_number: 2,
+				publish_date: "2023-05-20",
+			},
+			{
+				_uid: "news-3",
+				component: "article",
+				title: "Jak rozmawiać z dzieckiem o adopcji? Praktyczny poradnik",
+				content:
+					"Rozmowa z dzieckiem o adopcji to jeden z najważniejszych tematów dla rodzin adopcyjnych. W naszym poradniku podpowiadamy, jak przeprowadzić taką rozmowę.",
+				image: {
+					filename:
+						"https://a.storyblok.com/f/236278/1200x800/eb89f8f27a/about_us.jpg",
+					alt: "Rozmowa o adopcji",
+				},
+				tags: ["PSYCHOLOGIA", "EDUKACJA"],
+				article_number: 3,
+				publish_date: "2023-05-25",
+			},
+			{
+				_uid: "news-4",
+				component: "article",
+				title: "Kampania społeczna 'Adopcja to miłość' - podsumowanie",
+				content:
+					"Zakończyliśmy naszą kampanię społeczną 'Adopcja to miłość', której celem było zwiększenie świadomości społecznej na temat adopcji.",
+				image: {
+					filename:
+						"https://a.storyblok.com/f/236278/1200x800/eb89f8f27a/about_us.jpg",
+					alt: "Kampania społeczna",
+				},
+				tags: ["WYDARZENIA", "SPOŁECZEŃSTWO"],
+				article_number: 4,
+				publish_date: "2023-06-01",
+			},
+			{
+				_uid: "news-5",
+				component: "article",
+				title: "Współpraca z ośrodkami adopcyjnymi - nowe możliwości",
+				content:
+					"Nawiązaliśmy współpracę z kolejnymi ośrodkami adopcyjnymi w Polsce. Dzięki temu możemy dotrzeć z naszym wsparciem do jeszcze większej liczby rodzin.",
+				image: {
+					filename:
+						"https://a.storyblok.com/f/236278/1200x800/eb89f8f27a/about_us.jpg",
+					alt: "Współpraca",
+				},
+				tags: ["WSPÓŁPRACA", "ROZWÓJ"],
+				article_number: 5,
+				publish_date: "2023-06-05",
+			},
+		],
+	};
+
 	return (
 		<>
 			<Navbar />
@@ -91,8 +154,8 @@ export default async function Home() {
 			{aboutUsComponent ? (
 				<AboutUs blok={aboutUsComponent} />
 			) : (
-				<div className="mt-8 border-t-4 border-yellow-400 pt-4">
-					<h3 className="text-center text-red-500 mb-2">
+				<div className="mt-8 border-t-4 border-primary pt-4">
+					<h3 className="text-center text-red mb-2">
 						⚠️ Komponent About Us ze Storyblok nie został znaleziony -
 						wyświetlam wersję testową
 					</h3>
@@ -104,60 +167,20 @@ export default async function Home() {
 
 			<MakeDonation />
 
+			{newsComponent ? (
+				<News blok={newsComponent} />
+			) : (
+				<div className="mt-8 border-t-4 border-primary pt-4">
+					<h3 className="text-center text-red mb-2">
+						⚠️ Komponent News ze Storyblok nie został znaleziony - wyświetlam
+						wersję testową
+					</h3>
+					<News blok={testNewsData} />
+				</div>
+			)}
 			<HowYouCanHelp />
 
 			<TheySupport />
-
-			<div className="container mx-auto p-4 mt-8 bg-gray-100 rounded">
-				<h2 className="text-lg font-bold mb-2">Debug Storyblok Data:</h2>
-				<div className="grid grid-cols-1 gap-4">
-					<div>
-						<h3 className="font-semibold">Struktura strony głównej:</h3>
-						<p>
-							Strona główna znaleziona:{" "}
-							{storyblokData?.data?.story ? "TAK" : "NIE"}
-						</p>
-						<p>
-							Komponent body:{" "}
-							{storyblokData?.data?.story?.content?.body ? "TAK" : "NIE"}
-						</p>
-						<p>
-							Liczba bloków w body:{" "}
-							{storyblokData?.data?.story?.content?.body?.length || 0}
-						</p>
-						<p>
-							Komponenty na stronie:{" "}
-							{bodyBlocks.map((b: StoryblokBlock) => b.component).join(", ")}
-						</p>
-						<p>Karuzela znaleziona: {carouselComponent ? "TAK" : "NIE"}</p>
-						{carouselComponent && (
-							<>
-								<p>Component: {carouselComponent.component}</p>
-								<p>Liczba slajdów: {carouselComponent.slides?.length || 0}</p>
-							</>
-						)}
-						<p>Sekcja O nas znaleziona: {aboutUsComponent ? "TAK" : "NIE"}</p>
-						{aboutUsComponent && (
-							<>
-								<p>Component: {aboutUsComponent.component}</p>
-								<p>Tytuł: {aboutUsComponent.title || "brak"}</p>
-								<p>Opis: {aboutUsComponent.description ? "jest" : "brak"}</p>
-								<p>
-									Zdjęcie: {aboutUsComponent.image?.filename ? "jest" : "brak"}
-								</p>
-							</>
-						)}
-					</div>
-					<details>
-						<summary className="cursor-pointer font-semibold">
-							Pokaż pełne dane strony
-						</summary>
-						<pre className="text-xs overflow-auto mt-2 bg-gray-200 p-2 rounded">
-							{JSON.stringify(storyblokData?.data?.story?.content, null, 2)}
-						</pre>
-					</details>
-				</div>
-			</div>
 
 			{storyblokData && storyblokData.data && storyblokData.data.story && (
 				<StoryblokComponent blok={storyblokData.data.story.content} />

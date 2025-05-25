@@ -9,22 +9,55 @@ export const ButtonExample = () => {
 			<div className="flex flex-col gap-4">
 				<div className="flex items-center gap-4">
 					<Button>Wesprzyj nas</Button>
-					<span className="text-sm text-gray-600">Stan domyślny</span>
+					<span className="text-sm text-gray">Wariant domyślny</span>
 				</div>
 
 				<div className="flex items-center gap-4">
 					<Button disabled>Wesprzyj nas</Button>
-					<span className="text-sm text-gray-600">Stan disabled</span>
+					<span className="text-sm text-gray">Wariant domyślny - disabled</span>
 				</div>
 
 				<div className="flex items-center gap-4">
 					<Button icon={true}>Wesprzyj nas</Button>
-					<span className="text-sm text-gray-600">Stan domyślny</span>
+					<span className="text-sm text-gray">Wariant domyślny z ikoną</span>
 				</div>
 
 				<div className="flex items-center gap-4">
-					<Button disabled>Wesprzyj nas</Button>
-					<span className="text-sm text-gray-600">Stan disabled</span>
+					<Button variant="light">Czytaj więcej</Button>
+					<span className="text-sm text-gray">Wariant light</span>
+				</div>
+
+				<div className="flex items-center gap-4">
+					<Button variant="light" icon={true}>
+						Czytaj więcej
+					</Button>
+					<span className="text-sm text-gray">Wariant light z ikoną</span>
+				</div>
+
+				<div className="flex items-center gap-4">
+					<Button variant="light" disabled>
+						Czytaj więcej
+					</Button>
+					<span className="text-sm text-gray">Wariant light - disabled</span>
+				</div>
+
+				<div className="flex items-center gap-4">
+					<Button variant="carousel">Zobacz więcej</Button>
+					<span className="text-sm text-gray">Wariant carousel</span>
+				</div>
+
+				<div className="flex items-center gap-4">
+					<Button variant="carousel" icon={true}>
+						Zobacz więcej
+					</Button>
+					<span className="text-sm text-gray">Wariant carousel z ikoną</span>
+				</div>
+
+				<div className="flex items-center gap-4">
+					<Button variant="carousel" disabled>
+						Zobacz więcej
+					</Button>
+					<span className="text-sm text-gray">Wariant carousel - disabled</span>
 				</div>
 			</div>
 		</div>
