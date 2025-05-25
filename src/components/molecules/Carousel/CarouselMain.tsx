@@ -114,9 +114,9 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 									<div className="absolute inset-0 rounded-t-2xl bg-black/30" />
 								</div>
 
-								<div className="flex w-full flex-col justify-center gap-12 rounded-b-2xl bg-text-dark p-6 md:w-[493px] md:h-[524px] md:rounded-l-2xl md:rounded-r-none md:p-6 md:pl-10 md:pb-8">
-									<div className="flex flex-col gap-6">
-										<h2 className="font-open-sans font-semibold text-white text-2xl md:text-[32px] md:leading-[38.4px]">
+								<div className="flex w-full flex-col justify-center gap-12 rounded-b-2xl bg-text-dark p-6 md:w-[493px] md:h-[524px] md:rounded-l-2xl md:rounded-r-none md:p-6 md:pl-10 md:pb-8 lg:w-auto lg:gap-8 lg:p-6 lg:pl-6">
+									<div className="flex flex-col gap-6 lg:w-[304px]">
+										<h2 className="font-open-sans font-semibold text-white text-2xl md:text-[32px] md:leading-[38.4px] lg:text-2xl lg:leading-[28.8px]">
 											{slide.title}
 										</h2>
 										<p className="text-white font-nunito text-base leading-6">
@@ -152,8 +152,8 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 				</div>
 			</div>
 
-			<div className="mt-6 flex flex-col items-center justify-center space-y-4 md:flex-row md:justify-between md:space-y-0 md:items-center">
-				<div className="flex justify-center items-center space-x-2 md:flex-1 md:justify-center">
+			<div className="mt-6 flex flex-col items-center justify-center space-y-4 md:relative md:flex-row md:space-y-0">
+				<div className="flex justify-center items-center space-x-2 md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
 					{slides.map((_, index) => (
 						<button
 							key={index}
@@ -167,7 +167,7 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 					))}
 				</div>
 
-				<div className="flex space-x-6">
+				<div className="flex space-x-6 md:ml-auto">
 					<button
 						onClick={scrollPrev}
 						className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-black hover:bg-primary-hover"

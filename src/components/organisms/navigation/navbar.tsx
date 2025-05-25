@@ -30,25 +30,28 @@ export default function Navbar() {
 		<Disclosure as="nav" className="bg-white">
 			{({ open }) => (
 				<>
-					<div className="mx-auto w-full px-4 sm:px-8 md:px-8 lg:px-16 ">
-						<div className="relative flex h-16 items-center justify-between">
-							<div className="flex shrink-0 items-center gap-2 sm:gap-3">
-								<Link href="/" className="flex items-center gap-2 sm:gap-3">
+					<div className="mx-auto w-full px-4 sm:px-8 md:px-8 lg:px-16">
+						<div className="relative flex h-16 md:h-auto md:py-4 lg:h-16 lg:py-0 items-center justify-between">
+							<div className="flex shrink-0 items-center gap-2 sm:gap-3 md:gap-2 lg:gap-3">
+								<Link
+									href="/"
+									className="flex items-center gap-2 sm:gap-3 md:gap-2 lg:gap-3"
+								>
 									<Image
 										src="/assets/images/logo.png"
 										alt="Logo"
 										width={isMobile ? 36 : 64}
 										height={isMobile ? 36 : 64}
-										className="h-9 w-9 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16"
+										className="h-9 w-9 sm:h-12 sm:w-12 md:h-10 md:w-10 lg:h-16 lg:w-16"
 									/>
-									<p className="font-nunito text-sm font-semibold text-primary-text sm:text-base md:text-lg lg:text-xl">
+									<p className="font-nunito text-sm font-semibold text-primary-text sm:text-base md:text-base md:font-bold lg:text-xl lg:font-semibold">
 										Fundacja Adopcyjni
 									</p>
 								</Link>
 							</div>
 
 							<div className="hidden md:ml-6 md:block">
-								<div className="flex gap-4 lg:gap-8">
+								<div className="flex gap-4 md:gap-8 lg:gap-8">
 									{navigation.map((item) => (
 										<a
 											key={item.name}
