@@ -91,7 +91,7 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 		<div
 			{...storyblokEditable(blok)}
 			className={cn(
-				"relative w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 max-h-[524px]",
+				"relative w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 my-6",
 				className
 			)}
 		>
@@ -99,7 +99,7 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 				className="overflow-hidden rounded-none md:rounded-2xl h-full"
 				ref={emblaRef}
 			>
-				<div className="flex h-full">
+				<div className="flex h-full ">
 					{slides.map((slide, index) => (
 						<div className="relative flex min-w-full" key={index}>
 							<div className="flex w-full flex-col md:flex-row">
@@ -151,8 +151,9 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 					))}
 				</div>
 			</div>
-			<div className="mt-6 relative flex flex-col items-center justify-center space-y-4 md:space-y-0 md:px-8">
-				<div className="flex justify-center items-center space-x-2">
+
+			<div className="mt-6 flex flex-col items-center justify-center space-y-4 md:flex-row md:justify-between md:space-y-0 md:items-center">
+				<div className="flex justify-center items-center space-x-2 md:flex-1 md:justify-center">
 					{slides.map((_, index) => (
 						<button
 							key={index}
@@ -166,7 +167,7 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 					))}
 				</div>
 
-				<div className="flex space-x-6 md:absolute md:right-0 md:top-0">
+				<div className="flex space-x-6">
 					<button
 						onClick={scrollPrev}
 						className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-black hover:bg-primary-hover"
