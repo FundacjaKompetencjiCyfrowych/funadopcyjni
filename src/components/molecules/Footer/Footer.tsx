@@ -24,9 +24,9 @@ const Footer = ({
 	krs = "8888888888",
 }: FooterProps) => {
 	return (
-		<footer className="w-full py-10 px-4 md:pt-10 md:px-[64px] md:pb-16 lg:py-10 lg:px-16">
+		<footer className="w-full pt-10 px-4 pb-16 md:pt-10 md:px-[64px] md:pb-16 lg:py-10 lg:px-16">
 			<div className="max-w-[1440px] mx-auto">
-				<div className="flex flex-col md:flex-row justify-between gap-10 md:gap-12 lg:gap-6">
+				<div className="flex flex-col md:flex-row justify-between gap-4 md:gap-12 lg:gap-6">
 					<div className="flex flex-col gap-8 md:gap-[60px] lg:gap-8 md:w-[280px] lg:w-auto">
 						<div className="flex items-center gap-3">
 							<Image

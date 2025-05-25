@@ -34,19 +34,23 @@ const HowWeHelp = ({ title, items }: HowWeHelpProps) => {
 
 	return (
 		<section className="w-full bg-light-background">
-			<div className="py-12 px-4 md:px-8 lg:px-16 max-w-[1440px] mx-auto">
-				<div className="flex flex-col items-center gap-12 md:gap-8 lg:gap-12">
-					<h2 className="text-3xl md:text-2xl lg:text-3xl font-semibold text-center">
+			<div className="py-8 px-4 md:px-8 lg:px-16 max-w-[1440px] mx-auto">
+				<div className="flex flex-col items-center gap-6 md:gap-8 lg:gap-12">
+					<h2 className="text-2xl md:text-2xl lg:text-3xl font-semibold text-center font-open-sans">
 						{title || "JAK POMAGAMY?"}
 					</h2>
 
-					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 md:gap-4 lg:gap-8 w-full">
+					<div className="flex flex-col md:grid md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-4 lg:gap-8 w-full items-center">
 						{displayItems.map((item, index) => (
 							<div
 								key={index}
-								className="flex flex-col bg-white rounded-3xl p-6 md:py-8 md:px-7 lg:p-6 items-center justify-center aspect-square shadow-sm"
+								className={`flex flex-col bg-white rounded-3xl items-center justify-center shadow-sm w-[320px] h-[320px] md:w-auto md:h-auto md:aspect-square ${
+									index === 0
+										? "p-10 md:py-8 md:px-7 lg:p-6"
+										: "p-8 md:py-8 md:px-7 lg:p-6"
+								}`}
 							>
-								<div className="flex flex-col items-center justify-center h-full gap-4 md:gap-6 lg:gap-6">
+								<div className="flex flex-col items-center justify-center h-full gap-6 md:gap-6 lg:gap-6">
 									<div className="flex items-center justify-center w-full overflow-hidden">
 										<Image
 											src={item.imageUrl}
@@ -63,7 +67,9 @@ const HowWeHelp = ({ title, items }: HowWeHelpProps) => {
 							</div>
 						))}
 					</div>
-					<Button className="mt-4">Zobacz wszystko</Button>
+					<Button className="mt-8 text-sm md:text-base lg:text-lg">
+						Zobacz wszystko
+					</Button>
 				</div>
 			</div>
 		</section>

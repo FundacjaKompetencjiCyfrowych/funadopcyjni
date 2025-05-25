@@ -13,7 +13,7 @@ const buttonVariants = cva(
 				light:
 					"bg-white text-text-dark border border-text-dark hover:bg-gray-light focus:ring-text-dark text-base py-[10px] px-4 md:text-sm md:py-[10px] md:px-4 lg:text-base",
 				carousel:
-					"bg-primary text-black hover:bg-primary-hover focus:ring-primary text-base font-medium py-3 px-6 rounded-full lg:text-sm lg:py-4 lg:h-12",
+					"bg-primary text-black hover:bg-primary-hover focus:ring-primary text-sm md:text-base font-semibold py-4 px-6 rounded-full h-[46px] md:h-12 lg:text-sm lg:py-4 lg:h-12",
 			},
 		},
 		defaultVariants: {

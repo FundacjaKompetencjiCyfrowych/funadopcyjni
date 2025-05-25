@@ -149,42 +149,44 @@ export default async function Home() {
 		<>
 			<Navbar />
 
-			{carouselComponent && <CarouselMain blok={carouselComponent} />}
+			<div className="flex flex-col gap-14 md:gap-0 lg:gap-0">
+				{carouselComponent && <CarouselMain blok={carouselComponent} />}
 
-			{aboutUsComponent ? (
-				<AboutUs blok={aboutUsComponent} />
-			) : (
-				<div className="mt-8 border-t-4 border-primary pt-4">
-					<h3 className="text-center text-red mb-2">
-						⚠️ Komponent About Us ze Storyblok nie został znaleziony -
-						wyświetlam wersję testową
-					</h3>
-					<AboutUs blok={testAboutUsData} />
-				</div>
-			)}
+				{aboutUsComponent ? (
+					<AboutUs blok={aboutUsComponent} />
+				) : (
+					<div className="mt-8 border-t-4 border-primary pt-4">
+						<h3 className="text-center text-red mb-2">
+							⚠️ Komponent About Us ze Storyblok nie został znaleziony -
+							wyświetlam wersję testową
+						</h3>
+						<AboutUs blok={testAboutUsData} />
+					</div>
+				)}
 
-			<HowWeHelp />
+				<HowWeHelp />
 
-			<MakeDonation />
+				<MakeDonation />
 
-			{newsComponent ? (
-				<News blok={newsComponent} />
-			) : (
-				<div className="mt-8 border-t-4 border-primary pt-4">
-					<h3 className="text-center text-red mb-2">
-						⚠️ Komponent News ze Storyblok nie został znaleziony - wyświetlam
-						wersję testową
-					</h3>
-					<News blok={testNewsData} />
-				</div>
-			)}
-			<HowYouCanHelp />
+				{newsComponent ? (
+					<News blok={newsComponent} />
+				) : (
+					<div className="mt-8 border-t-4 border-primary pt-4">
+						<h3 className="text-center text-red mb-2">
+							⚠️ Komponent News ze Storyblok nie został znaleziony - wyświetlam
+							wersję testową
+						</h3>
+						<News blok={testNewsData} />
+					</div>
+				)}
+				<HowYouCanHelp />
 
-			<TheySupport />
+				<TheySupport />
 
-			{storyblokData && storyblokData.data && storyblokData.data.story && (
-				<StoryblokComponent blok={storyblokData.data.story.content} />
-			)}
+				{storyblokData && storyblokData.data && storyblokData.data.story && (
+					<StoryblokComponent blok={storyblokData.data.story.content} />
+				)}
+			</div>
 
 			<Footer />
 		</>

@@ -91,19 +91,19 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 		<div
 			{...storyblokEditable(blok)}
 			className={cn(
-				"relative w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 my-6",
+				"relative w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 my-0 md:my-6",
 				className
 			)}
 		>
 			<div
-				className="overflow-hidden rounded-none md:rounded-2xl h-full"
+				className="overflow-hidden rounded-2xl h-[550px] md:h-full"
 				ref={emblaRef}
 			>
-				<div className="flex h-full ">
+				<div className="flex h-full">
 					{slides.map((slide, index) => (
 						<div className="relative flex min-w-full" key={index}>
-							<div className="flex w-full flex-col md:flex-row">
-								<div className="relative w-full md:hidden">
+							<div className="flex w-full flex-col md:flex-row h-full">
+								<div className="relative w-full h-[255px] md:hidden">
 									<Image
 										src={slide.image.filename}
 										alt={slide.image.alt || slide.title}
@@ -114,12 +114,12 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 									<div className="absolute inset-0 rounded-t-2xl bg-black/30" />
 								</div>
 
-								<div className="flex w-full flex-col justify-center gap-12 rounded-b-2xl bg-text-dark p-6 md:w-[493px] md:h-[524px] md:rounded-l-2xl md:rounded-r-none md:p-6 md:pl-10 md:pb-8 lg:w-auto lg:gap-8 lg:p-6 lg:pl-6">
-									<div className="flex flex-col gap-6 lg:w-[304px]">
-										<h2 className="font-open-sans font-semibold text-white text-2xl md:text-[32px] md:leading-[38.4px] lg:text-2xl lg:leading-[28.8px]">
+								<div className="flex w-full flex-col justify-end items-center gap-8 h-[295px] md:h-[524px] rounded-b-2xl bg-text-dark px-6 pt-6 pb-8 md:w-[493px] md:rounded-l-2xl md:rounded-r-none md:justify-center md:gap-8 md:px-6 md:pt-6 md:pb-8 lg:gap-12 lg:px-10 lg:pt-6 lg:pb-8">
+									<div className="flex flex-col gap-6 w-full max-w-[313px] md:w-[304px] lg:w-[420px]">
+										<h2 className="font-open-sans font-semibold text-white text-2xl md:text-[32px] md:leading-[38.4px] lg:text-[32px] lg:leading-[38.4px]">
 											{slide.title}
 										</h2>
-										<p className="text-white font-nunito text-base leading-6">
+										<p className="text-white font-nunito text-sm md:text-base lg:text-base leading-6">
 											{slide.description}
 										</p>
 									</div>
@@ -152,7 +152,7 @@ export const CarouselMain = ({ blok, className }: CarouselMainProps) => {
 				</div>
 			</div>
 
-			<div className="mt-6 flex flex-col items-center justify-center space-y-4 md:relative md:flex-row md:space-y-0">
+			<div className="mt-0 px-4 py-4 md:mt-6 md:px-0 md:py-0 flex flex-row items-center justify-between md:justify-center md:relative md:flex-row md:space-y-0">
 				<div className="flex justify-center items-center space-x-2 md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
 					{slides.map((_, index) => (
 						<button

@@ -67,10 +67,10 @@ const TheySupport = ({
 	logos = defaultLogos,
 }: TheySupportProps) => {
 	return (
-		<section className="w-full bg-white py-12">
+		<section className="w-full bg-white py-8 md:py-12 lg:py-12">
 			<div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16">
-				<div className="flex flex-col items-center gap-12 md:gap-8 lg:gap-12">
-					<h2 className="text-3xl md:text-2xl lg:text-3xl font-semibold text-center">
+				<div className="flex flex-col items-center gap-6 md:gap-8 lg:gap-12">
+					<h2 className="text-2xl md:text-2xl lg:text-3xl font-semibold text-center font-open-sans">
 						{title}
 					</h2>
 
