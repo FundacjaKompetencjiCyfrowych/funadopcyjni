@@ -10,7 +10,7 @@ import { useWindowSize } from "@react-hook/window-size";
 import Link from "next/link";
 
 const navigation = [
-	{ name: "Aktualności", href: "#", current: true },
+	{ name: "Aktualności", href: "/aktualnosci", current: false },
 	{ name: "O fundacji", href: "#", current: false },
 	{ name: "Centrum wsparcia", href: "#", current: false },
 	{ name: "Wesprzyj nas", href: "#", current: false },
@@ -53,7 +53,7 @@ export default function Navbar() {
 							<div className="hidden md:ml-6 md:block">
 								<div className="flex gap-4 md:gap-8 lg:gap-8">
 									{navigation.map((item) => (
-										<a
+										<Link
 											key={item.name}
 											href={item.href}
 											aria-current={item.current ? "page" : undefined}
@@ -63,7 +63,7 @@ export default function Navbar() {
 											)}
 										>
 											{item.name}
-										</a>
+										</Link>
 									))}
 								</div>
 							</div>
@@ -85,17 +85,17 @@ export default function Navbar() {
 					<DisclosurePanel className="md:hidden">
 						<div className="space-y-1 px-4 pb-3 pt-2 flex flex-col justify-center items-center">
 							{navigation.map((item) => (
-								<DisclosureButton
-									key={item.name}
-									as="a"
-									href={item.href}
-									aria-current={item.current ? "page" : undefined}
-									className={classNames(
-										item.current ? "font-semibold" : "font-normal",
-										"block rounded-md px-3 py-2 font-nunito text-base text-primary-text hover:underline hover:underline-offset-6 hover:decoration-2 hover:decoration-primary"
-									)}
-								>
-									{item.name}
+								<DisclosureButton key={item.name} as="div">
+									<Link
+										href={item.href}
+										aria-current={item.current ? "page" : undefined}
+										className={classNames(
+											item.current ? "font-semibold" : "font-normal",
+											"block rounded-md px-3 py-2 font-nunito text-base text-primary-text hover:underline hover:underline-offset-6 hover:decoration-2 hover:decoration-primary"
+										)}
+									>
+										{item.name}
+									</Link>
 								</DisclosureButton>
 							))}
 						</div>
