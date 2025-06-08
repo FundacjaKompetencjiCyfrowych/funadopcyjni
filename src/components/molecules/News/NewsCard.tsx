@@ -192,11 +192,7 @@ const NewsCard = ({ item, variant = "article" }: NewsCardProps) => {
 				</article>
 			)}
 
-			<article
-				className={`flex md:hidden flex-col h-full w-full ${
-					isFeatured ? "max-w-[361px]" : "max-w-[420px]"
-				}`}
-			>
+			<article className="flex md:hidden flex-col h-full w-full">
 				<div className="mb-4">
 					{item.image?.filename ? (
 						<div

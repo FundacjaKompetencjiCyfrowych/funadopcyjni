@@ -238,8 +238,8 @@ export default function NewsPage({
 			<main className="min-h-screen bg-white">
 				<div className="mx-auto max-w-screen-2xl pt-0 md:pt-12">
 					<section className="pb-12 pt-12 px-4 md:pb-12 md:pt-0 md:px-8">
-						<div className="mx-auto flex flex-col gap-6 max-w-sm md:gap-[330px] md:max-w-none md:flex-row md:justify-between md:items-start">
-							<h1 className="font-open-sans font-semibold leading-tight text-text-dark text-4xl text-center md:text-[32px] md:text-left">
+						<div className="mx-auto flex flex-col gap-6 md:gap-[330px] md:max-w-none md:flex-row md:justify-between md:items-start">
+							<h1 className="font-open-sans font-semibold leading-tight text-text-dark text-4xl text-left md:text-[32px]">
 								AKTUALNOŚCI
 							</h1>
 							<SearchInput
@@ -252,7 +252,7 @@ export default function NewsPage({
 					</section>
 
 					<section className="pb-12 px-4 md:px-8">
-						<div className="mx-auto flex flex-col gap-6 max-w-sm md:gap-8 md:max-w-none md:items-center">
+						<div className="mx-auto flex flex-col gap-6 md:gap-8 md:max-w-none md:items-center">
 							<div className="flex flex-col gap-2 text-center md:gap-4 md:text-center">
 								<h2 className="font-open-sans font-semibold text-text-dark text-xl md:text-2xl">
 									Wyniki wyszukiwania dla &quot;{searchTerm}&quot;
@@ -305,8 +305,8 @@ export default function NewsPage({
 		<main className="min-h-screen bg-white">
 			<div className="mx-auto max-w-screen-2xl pt-0 md:pt-12">
 				<section className="pb-12 pt-12 px-4 md:pb-12 md:pt-0 md:px-8">
-					<div className="mx-auto flex flex-col gap-6 max-w-sm md:gap-[330px] md:max-w-none md:flex-row md:justify-between md:items-start">
-						<h1 className="font-open-sans font-semibold leading-tight text-text-dark text-4xl text-center md:text-[32px] md:text-left">
+					<div className="mx-auto flex flex-col gap-6 md:gap-[330px] md:max-w-none md:flex-row md:justify-between md:items-start">
+						<h1 className="font-open-sans font-semibold leading-tight text-text-dark text-4xl text-left md:text-[32px]">
 							AKTUALNOŚCI
 						</h1>
 						<SearchInput
@@ -320,7 +320,7 @@ export default function NewsPage({
 
 				{featuredArticle && (
 					<section className="pb-12 px-4 md:px-8">
-						<div className="mx-auto flex flex-col gap-6 max-w-sm items-center md:gap-12 md:max-w-none md:items-start">
+						<div className="mx-auto flex flex-col gap-6 items-center md:gap-12 md:max-w-none md:items-start">
 							<h2 className="font-open-sans font-semibold text-text-dark text-2xl text-center md:text-2xl md:text-left">
 								NAJNOWSZY WPIS
 							</h2>
@@ -331,7 +331,7 @@ export default function NewsPage({
 
 				{convertedEvents.length > 0 && (
 					<section className="pb-12 px-4 md:px-8">
-						<div className="mx-auto flex flex-col gap-6 max-w-sm md:gap-8 md:max-w-[770px] md:items-center">
+						<div className="mx-auto flex flex-col gap-6 md:gap-8 md:max-w-[770px] md:items-center">
 							<h2 className="font-open-sans font-semibold text-text-dark text-2xl text-center">
 								WYDARZENIA
 							</h2>
@@ -345,7 +345,7 @@ export default function NewsPage({
 				)}
 
 				<section className="bg-white py-8 px-4 md:py-4 md:px-4">
-					<div className="mx-auto flex flex-col gap-6 max-w-sm md:gap-8 md:max-w-none md:items-center">
+					<div className="mx-auto flex flex-col gap-6 md:gap-8 md:max-w-none md:items-center">
 						<h2 className="font-open-sans font-semibold text-text-dark text-2xl text-center">
 							WSZYSTKIE ARTYKUŁY
 						</h2>
@@ -354,7 +354,7 @@ export default function NewsPage({
 							tabs={[...TABS]}
 							defaultTab="all"
 							onTabChange={handleTabChange}
-							className="mb-12 md:w-[762px] md:mb-0"
+							className="w-full mb-12 md:w-[762px] md:mb-0"
 						/>
 
 						{/* Mobile Layout */}
