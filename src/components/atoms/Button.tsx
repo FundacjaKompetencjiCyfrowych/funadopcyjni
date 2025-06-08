@@ -2,18 +2,21 @@ import React from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import ArrowIcon from "@/assets/svg/icons/arrow_right_up_black.svg";
+import ArrowRightIcon from "@/assets/svg/icons/arrow_right_button.svg";
 
 const buttonVariants = cva(
-	"inline-flex items-center justify-center rounded-[32px] text-center font-nunito font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
+	"inline-flex items-center justify-center rounded-4xl text-center font-nunito font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 min-h-12",
 	{
 		variants: {
 			variant: {
 				default:
-					"bg-primary text-primary-text hover:bg-primary-hover focus:ring-primary text-lg py-4 px-6",
+					"bg-primary text-primary-text hover:bg-primary-hover focus:ring-primary text-lg py-3 px-6",
+				event:
+					"bg-primary text-primary-text hover:bg-primary-hover focus:ring-primary text-lg py-2.5 px-6",
 				light:
-					"bg-white text-text-dark border border-text-dark hover:bg-gray-light focus:ring-text-dark text-base py-[10px] px-4 md:text-sm lg:text-base",
+					"bg-white text-text-dark border border-text-dark hover:bg-gray-light focus:ring-text-dark text-base py-2.5 px-4 md:text-sm lg:text-base",
 				carousel:
-					"bg-primary text-black hover:bg-primary-hover focus:ring-primary text-sm md:text-base font-semibold py-4 px-6 rounded-full h-[46px] md:h-12 lg:text-sm",
+					"bg-primary text-black hover:bg-primary-hover focus:ring-primary text-sm md:text-base font-semibold py-2.5 px-6 rounded-full lg:text-sm",
 			},
 		},
 		defaultVariants: {
@@ -26,7 +29,7 @@ export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children: React.ReactNode;
 	icon?: boolean;
-	variant?: "default" | "light" | "carousel";
+	variant?: "default" | "light" | "carousel" | "event";
 }
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	(
@@ -48,24 +51,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				{children}
 				{icon &&
 					(variant === "default" ? (
-						<ArrowIcon className="size-6 object-contain text-primary" />
+						<ArrowIcon className="size-6 object-contain text-black" />
 					) : (
-						<svg
-							className={cn(
-								"ml-2 size-4",
-								variant === "light" ? "text-text-dark" : "text-black"
-							)}
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M14 5l7 7m0 0l-7 7m7-7H3"
-							/>
-						</svg>
+						<ArrowRightIcon className="ml-2 size-4 text-black" />
 					))}
 			</button>
 		);

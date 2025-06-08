@@ -107,7 +107,7 @@ const NewsCard = ({ item, variant = "article" }: NewsCardProps) => {
 
 			<div className="mt-auto justify-start flex">
 				<Button
-					variant={isFeatured ? "default" : "light"}
+					variant={isFeatured ? "default" : isEvent ? "event" : "light"}
 					icon={!isFeatured}
 					onClick={() =>
 						(window.location.href = `/aktualnosci/${item.article_number}`)
