@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { SearchInput, Tabs, Button } from "@/components/atoms";
 import NewsCard from "./NewsCard";
 import { NewsItem } from "@/types/storyblok";
+import { useRouter } from "next/navigation";
 
 interface StoryblokStory {
 	uuid: string;
@@ -17,6 +18,7 @@ interface StoryblokStory {
 			alt?: string;
 		};
 		tags?: string[];
+		component?: string;
 	};
 	published_at?: string;
 	created_at?: string;
@@ -26,6 +28,9 @@ interface NewsPageProps {
 	readonly newsSection: readonly NewsItem[];
 	readonly articles: readonly StoryblokStory[];
 	readonly events: readonly (StoryblokStory | NewsItem)[];
+	readonly searchResults?: readonly NewsItem[];
+	readonly isSearchMode?: boolean;
+	readonly searchTerm?: string;
 }
 
 const TABS = [
@@ -84,10 +89,29 @@ export default function NewsPage({
 	newsSection,
 	articles,
 	events,
+	searchResults,
+	isSearchMode,
+	searchTerm,
 }: NewsPageProps) {
-	const [searchTerm, setSearchTerm] = useState("");
+	const router = useRouter();
+	const [searchTermLocal, setSearchTermLocal] = useState(searchTerm || "");
 	const [activeTab, setActiveTab] = useState<string>("all");
 	const [articlesToShow, setArticlesToShow] = useState(INITIAL_ARTICLES_COUNT);
+
+	// Debounced search - po 500ms bezczynności uruchom wyszukiwanie
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			if (searchTermLocal.trim() && searchTermLocal !== searchTerm) {
+				router.push(
+					`/aktualnosci?search=${encodeURIComponent(searchTermLocal)}`
+				);
+			} else if (!searchTermLocal.trim() && searchTerm) {
+				router.push("/aktualnosci");
+			}
+		}, 500);
+
+		return () => clearTimeout(timeoutId);
+	}, [searchTermLocal, searchTerm, router]);
 
 	const convertedArticles = useMemo(() => {
 		return articles.filter(isValidArticle).map(
@@ -135,7 +159,11 @@ export default function NewsPage({
 	const displayedArticles = allArticles.slice(1);
 
 	const filteredArticles = useMemo(() => {
-		const searchLower = searchTerm.toLowerCase();
+		if (isSearchMode) {
+			return searchResults || [];
+		}
+
+		const searchLower = searchTermLocal.toLowerCase();
 
 		return displayedArticles.filter((article) => {
 			const matchesSearch =
@@ -152,11 +180,17 @@ export default function NewsPage({
 				)
 			);
 		});
-	}, [displayedArticles, searchTerm, activeTab]);
+	}, [
+		displayedArticles,
+		searchTermLocal,
+		activeTab,
+		isSearchMode,
+		searchResults,
+	]);
 
 	const handleSearchChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
-			setSearchTerm(e.target.value);
+			setSearchTermLocal(e.target.value);
 		},
 		[]
 	);
@@ -172,6 +206,63 @@ export default function NewsPage({
 
 	const hasMoreArticles = filteredArticles.length > articlesToShow;
 
+	// Jeśli jesteśmy w trybie wyszukiwania, renderuj wyniki wyszukiwania
+	if (isSearchMode && searchTerm) {
+		return (
+			<main className="min-h-screen bg-white">
+				<div className="mx-auto max-w-screen-2xl">
+					<section className="px-4 pb-12 pt-12">
+						<div className="mx-auto flex max-w-sm flex-col gap-6">
+							<h1 className="text-center font-open-sans text-4xl font-semibold leading-tight text-text-dark">
+								AKTUALNOŚCI
+							</h1>
+							<SearchInput
+								value={searchTermLocal}
+								onChange={handleSearchChange}
+								className="mx-auto"
+								aria-label="Wyszukaj artykuły"
+							/>
+						</div>
+					</section>
+
+					<section className="px-4 pb-12">
+						<div className="mx-auto flex max-w-sm flex-col gap-6">
+							<div className="text-center">
+								<h2 className="font-open-sans text-2xl font-semibold text-text-dark">
+									Wyniki wyszukiwania dla &quot;{searchTerm}&quot;
+								</h2>
+								<p className="mt-2 font-nunito text-lg font-bold text-text-muted">
+									Znaleziono {filteredArticles.length}{" "}
+									{filteredArticles.length === 1
+										? "artykuł"
+										: filteredArticles.length <= 4
+											? "artykuły"
+											: "artykułów"}
+								</p>
+							</div>
+
+							{filteredArticles.length > 0 ? (
+								<div className="flex flex-col gap-14">
+									{filteredArticles.map((article) => (
+										<NewsCard
+											key={article._uid}
+											item={article}
+											variant="article"
+										/>
+									))}
+								</div>
+							) : (
+								<div className="mt-8 text-center text-text-muted">
+									Nie znaleziono artykułów dla frazy: &quot;{searchTerm}&quot;
+								</div>
+							)}
+						</div>
+					</section>
+				</div>
+			</main>
+		);
+	}
+
 	return (
 		<main className="min-h-screen bg-white">
 			<div className="mx-auto max-w-screen-2xl">
@@ -181,7 +272,7 @@ export default function NewsPage({
 							AKTUALNOŚCI
 						</h1>
 						<SearchInput
-							value={searchTerm}
+							value={searchTermLocal}
 							onChange={handleSearchChange}
 							className="mx-auto"
 							aria-label="Wyszukaj artykuły"
@@ -245,9 +336,10 @@ export default function NewsPage({
 							</div>
 						)}
 
-						{filteredArticles.length === 0 && searchTerm && (
+						{filteredArticles.length === 0 && searchTermLocal && (
 							<div className="mt-8 text-center text-text-muted">
-								Nie znaleziono artykułów dla frazy: &quot;{searchTerm}&quot;
+								Nie znaleziono artykułów dla frazy: &quot;{searchTermLocal}
+								&quot;
 							</div>
 						)}
 					</div>
