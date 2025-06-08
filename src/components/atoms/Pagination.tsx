@@ -32,26 +32,20 @@ export const Pagination = ({
 		const pages: (number | string)[] = [];
 
 		if (totalPages <= 7) {
-			// Jeśli mamy 7 lub mniej stron, wyświetl wszystkie
 			for (let i = 1; i <= totalPages; i++) {
 				pages.push(i);
 			}
 		} else {
-			// Zawsze pokazuj pierwszą stronę
 			pages.push(1);
 
 			if (currentPage <= 3) {
-				// Jesteśmy na początku
 				pages.push(2, 3, 4, "...");
 			} else if (currentPage >= totalPages - 2) {
-				// Jesteśmy na końcu
 				pages.push("...", totalPages - 3, totalPages - 2, totalPages - 1);
 			} else {
-				// Jesteśmy gdzieś w środku
 				pages.push("...", currentPage - 1, currentPage, currentPage + 1, "...");
 			}
 
-			// Zawsze pokazuj ostatnią stronę (jeśli nie jest już dodana)
 			if (pages[pages.length - 1] !== totalPages) {
 				pages.push(totalPages);
 			}
@@ -66,7 +60,6 @@ export const Pagination = ({
 
 	return (
 		<div className={cn("hidden lg:flex items-center gap-8", className)}>
-			{/* Przycisk poprzedni */}
 			<button
 				onClick={handlePrevious}
 				disabled={currentPage === 1}
@@ -98,7 +91,6 @@ export const Pagination = ({
 				</svg>
 			</button>
 
-			{/* Numery stron */}
 			<div className="flex items-center gap-2">
 				{generatePageNumbers().map((page, index) => {
 					if (page === "...") {
@@ -134,7 +126,6 @@ export const Pagination = ({
 				})}
 			</div>
 
-			{/* Przycisk następny */}
 			<button
 				onClick={handleNext}
 				disabled={currentPage === totalPages}

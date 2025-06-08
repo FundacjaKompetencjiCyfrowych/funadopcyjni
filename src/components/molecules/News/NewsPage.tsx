@@ -141,7 +141,6 @@ export default function NewsPage({
 	}, [isTabletOrDesktop, isDesktop]);
 
 	const convertedArticles = useMemo(() => {
-		// Filtrujemy tylko StoryblokStory i konwertujemy do NewsItem
 		return articles
 			.filter(
 				(article): article is StoryblokStory =>
@@ -185,13 +184,10 @@ export default function NewsPage({
 		});
 	}, [events]);
 
-	// Dla mobile/tablet używamy pełnej listy artykułów (newsSection + convertedArticles z StoryblokStory)
-	// Dla desktop używamy spaginowanych artykułów (articles są już NewsItem[] gotowe do użycia)
 	const allArticlesForMobileTablet = useMemo(() => {
 		return [...newsSection, ...convertedArticles];
 	}, [newsSection, convertedArticles]);
 
-	// Dla desktop - rozdzielamy NewsItem[] i StoryblokStory[]
 	const allArticlesForDesktop = useMemo(() => {
 		const newsItems = articles.filter(
 			(article): article is NewsItem =>
@@ -199,8 +195,6 @@ export default function NewsPage({
 		);
 		const storyblokStories = convertedArticles;
 
-		// Jeśli mamy gotowe NewsItem (z paginacji), używamy ich
-		// W przeciwnym razie używamy skonwertowanych StoryblokStory
 		return newsItems.length > 0 ? newsItems : storyblokStories;
 	}, [articles, convertedArticles]);
 
@@ -208,7 +202,6 @@ export default function NewsPage({
 	const displayedArticlesForMobileTablet = allArticlesForMobileTablet.slice(1);
 	const displayedArticlesForDesktop = allArticlesForDesktop;
 
-	// Filtrowanie artykułów dla mobile/tablet (używa pełnej listy)
 	const filteredArticlesMobileTablet = useMemo(() => {
 		if (isSearchMode) {
 			return searchResults || [];
@@ -239,7 +232,6 @@ export default function NewsPage({
 		searchResults,
 	]);
 
-	// Filtrowanie artykułów dla desktop (używa spaginowanych danych)
 	const filteredArticlesDesktop = useMemo(() => {
 		if (isSearchMode) {
 			return searchResults || [];
@@ -282,7 +274,6 @@ export default function NewsPage({
 			setActiveTab(tabId);
 			if (isDesktop) {
 				setArticlesToShow(INITIAL_ARTICLES_COUNT_DESKTOP);
-				// Dla ekranów lg+ resetuj do pierwszej strony przy zmianie taba
 				const searchParams = new URLSearchParams(window.location.search);
 				searchParams.delete("page");
 				if (debouncedSearchTerm) {
@@ -314,7 +305,6 @@ export default function NewsPage({
 	const hasMoreArticlesMobileTablet =
 		filteredArticlesMobileTablet.length > articlesToShow;
 
-	// Paginacja dla ekranów lg+
 	const totalPages = Math.ceil(totalStories / perPage);
 	const handlePageChange = useCallback(
 		(page: number) => {
@@ -384,7 +374,6 @@ export default function NewsPage({
 											/>
 										))}
 									</div>
-									{/* Desktop Layout lg+ */}
 									<div className="hidden lg:grid grid-cols-3 gap-x-8 gap-y-8 w-full max-w-[1312px]">
 										{(searchResults || []).map((article) => (
 											<NewsCard
@@ -463,7 +452,6 @@ export default function NewsPage({
 							className="w-full mb-12 -mx-4 px-4 md:mb-0 lg:mx-0 lg:px-0 lg:w-full lg:max-w-[1312px] lg:mb-8"
 						/>
 
-						{/* Mobile Layout */}
 						<div className="flex md:hidden flex-col gap-14">
 							{filteredArticlesMobileTablet
 								.slice(0, articlesToShow)
@@ -488,14 +476,12 @@ export default function NewsPage({
 								))}
 						</div>
 
-						{/* Desktop Layout lg+ - używa paginacji zamiast "Load More" */}
 						<div className="hidden lg:grid grid-cols-3 gap-x-8 gap-y-8 w-full max-w-[1312px]">
 							{filteredArticlesDesktop.map((article) => (
 								<NewsCard key={article._uid} item={article} variant="article" />
 							))}
 						</div>
 
-						{/* Przycisk "Załaduj więcej" dla mobile i tablet */}
 						{hasMoreArticlesMobileTablet && (
 							<div className="flex justify-center mt-12 md:w-[361px] md:mt-0 lg:hidden">
 								<Button
@@ -507,7 +493,6 @@ export default function NewsPage({
 							</div>
 						)}
 
-						{/* Paginacja dla desktop lg+ */}
 						<Pagination
 							currentPage={currentPage}
 							totalPages={totalPages}

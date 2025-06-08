@@ -105,7 +105,6 @@ async function fetchNewsData(options: FetchNewsDataOptions = {}) {
 			};
 		}
 
-		// Pobierz home page dla news section - główne źródło artykułów
 		const homeData = await storyblokApi.get("cdn/stories/home", {
 			version: "draft",
 		});
@@ -155,7 +154,6 @@ async function fetchNewsData(options: FetchNewsDataOptions = {}) {
 
 		const articles = newsArticles;
 
-		// Implementacja paginacji po stronie serwera dla artykułów
 		const currentPage = options.page || 1;
 		const perPage = options.perPage || 9;
 		const startIndex = (currentPage - 1) * perPage;
@@ -168,7 +166,7 @@ async function fetchNewsData(options: FetchNewsDataOptions = {}) {
 			events,
 			isSearchMode: false,
 			searchResults: [],
-			totalStories: articles.length, // Używamy długości wszystkich artykułów do obliczania stron
+			totalStories: articles.length,
 			currentPage,
 			perPage,
 		};
