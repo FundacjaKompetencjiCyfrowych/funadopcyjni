@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { SearchInput, Tabs, Button } from "@/components/atoms";
 import NewsCard from "./NewsCard";
 import { NewsItem } from "@/types/storyblok";
@@ -23,19 +23,62 @@ interface StoryblokStory {
 }
 
 interface NewsPageProps {
-	newsSection: NewsItem[];
-	articles: StoryblokStory[];
-	events: StoryblokStory[] | NewsItem[];
+	readonly newsSection: readonly NewsItem[];
+	readonly articles: readonly StoryblokStory[];
+	readonly events: readonly (StoryblokStory | NewsItem)[];
 }
 
-const tabs = [
+const TABS = [
 	{ id: "all", label: "Wszystkie" },
 	{ id: "rodzicielstwo", label: "Rodzicielstwo" },
 	{ id: "psychologia", label: "Psychologia" },
 	{ id: "pierwsza-pomoc", label: "Pierwsza Pomoc" },
 	{ id: "wydarzenia", label: "Wydarzenia" },
 	{ id: "inne", label: "Inne" },
-];
+] as const;
+
+const INITIAL_ARTICLES_COUNT = 3;
+const LOAD_MORE_COUNT = 3;
+
+const isValidArticle = (
+	article: StoryblokStory
+): article is StoryblokStory & {
+	uuid: string;
+	content: NonNullable<StoryblokStory["content"]> & {
+		title: string;
+		image: { filename: string; alt?: string };
+	};
+} => {
+	return !!(
+		article.uuid &&
+		article.content?.title &&
+		(article.content?.content || article.content?.description) &&
+		article.content?.image?.filename &&
+		(article.published_at || article.created_at)
+	);
+};
+
+const isValidEvent = (event: StoryblokStory | NewsItem): boolean => {
+	if ("component" in event && "_uid" in event) {
+		const newsItem = event as NewsItem;
+		return !!(
+			newsItem._uid &&
+			newsItem.title &&
+			newsItem.content &&
+			newsItem.image?.filename &&
+			newsItem.publish_date
+		);
+	}
+
+	const storyblokEvent = event as StoryblokStory;
+	return !!(
+		storyblokEvent.uuid &&
+		(storyblokEvent.content?.title || storyblokEvent.name) &&
+		(storyblokEvent.content?.content || storyblokEvent.content?.description) &&
+		storyblokEvent.content?.image?.filename &&
+		(storyblokEvent.published_at || storyblokEvent.created_at)
+	);
+};
 
 export default function NewsPage({
 	newsSection,
@@ -43,80 +86,61 @@ export default function NewsPage({
 	events,
 }: NewsPageProps) {
 	const [searchTerm, setSearchTerm] = useState("");
-	const [activeTab, setActiveTab] = useState("all");
-	const [articlesToShow, setArticlesToShow] = useState(3);
+	const [activeTab, setActiveTab] = useState<string>("all");
+	const [articlesToShow, setArticlesToShow] = useState(INITIAL_ARTICLES_COUNT);
 
-	// Konwertuj dane ze Storyblok na format NewsItem
 	const convertedArticles = useMemo(() => {
-		return articles.map((article: StoryblokStory, index: number) => ({
-			_uid: article.uuid || `article-${index}`,
-			component: "article",
-			title: article.content?.title || article.name || "Bez tytułu",
-			content:
-				article.content?.content ||
-				article.content?.description ||
-				"Brak treści",
-			image: article.content?.image || {
-				filename:
-					"https://a.storyblok.com/f/236278/1200x800/eb89f8f27a/about_us.jpg",
-				alt: "Domyślne zdjęcie artykułu",
-			},
-			tags: article.content?.tags || [],
-			article_number: index + 1,
-			publish_date:
-				article.published_at || article.created_at || new Date().toISOString(),
-		}));
+		return articles.filter(isValidArticle).map(
+			(article, index): NewsItem => ({
+				_uid: article.uuid,
+				component: "article" as const,
+				title: article.content.title,
+				content: article.content.content || article.content.description || "",
+				image: article.content.image,
+				tags: article.content.tags || [],
+				article_number: index + 1,
+				publish_date: article.published_at || article.created_at || "",
+			})
+		);
 	}, [articles]);
 
 	const convertedEvents = useMemo(() => {
-		const result = events.map(
-			(event: StoryblokStory | NewsItem, index: number) => {
-				// Jeśli to już jest NewsItem (dane testowe)
-				if ("component" in event && "_uid" in event) {
-					return event as NewsItem;
-				}
-				// Jeśli to StoryblokStory
-				const storyblokEvent = event as StoryblokStory;
-				return {
-					_uid: storyblokEvent.uuid || `event-${index}`,
-					component: "event",
-					title:
-						storyblokEvent.content?.title ||
-						storyblokEvent.name ||
-						"Bez tytułu",
-					content:
-						storyblokEvent.content?.content ||
-						storyblokEvent.content?.description ||
-						"Brak treści",
-					image: storyblokEvent.content?.image || {
-						filename:
-							"https://a.storyblok.com/f/236278/1200x800/eb89f8f27a/about_us.jpg",
-						alt: "Domyślne zdjęcie wydarzenia",
-					},
-					tags: [],
-					article_number: index + 1,
-					publish_date:
-						storyblokEvent.published_at ||
-						storyblokEvent.created_at ||
-						new Date().toISOString(),
-				} as NewsItem;
+		return events.filter(isValidEvent).map((event, index): NewsItem => {
+			if ("component" in event && "_uid" in event) {
+				return event as NewsItem;
 			}
-		);
-		return result;
+			const storyblokEvent = event as StoryblokStory;
+			return {
+				_uid: storyblokEvent.uuid,
+				component: "event" as const,
+				title: storyblokEvent.content?.title || storyblokEvent.name || "",
+				content:
+					storyblokEvent.content?.content ||
+					storyblokEvent.content?.description ||
+					"",
+				image: storyblokEvent.content?.image || { filename: "", alt: "" },
+				tags: storyblokEvent.content?.tags || [],
+				article_number: index + 1,
+				publish_date:
+					storyblokEvent.published_at || storyblokEvent.created_at || "",
+			};
+		});
 	}, [events]);
 
 	const allArticles = useMemo(() => {
 		return [...newsSection, ...convertedArticles];
 	}, [newsSection, convertedArticles]);
 
-	const featuredArticle = allArticles[0] || null;
+	const featuredArticle = allArticles[0] ?? null;
 	const displayedArticles = allArticles.slice(1);
 
 	const filteredArticles = useMemo(() => {
+		const searchLower = searchTerm.toLowerCase();
+
 		return displayedArticles.filter((article) => {
 			const matchesSearch =
-				article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				article.content.toLowerCase().includes(searchTerm.toLowerCase());
+				article.title.toLowerCase().includes(searchLower) ||
+				article.content.toLowerCase().includes(searchLower);
 
 			if (activeTab === "all") return matchesSearch;
 			if (activeTab === "wydarzenia") return false;
@@ -130,31 +154,45 @@ export default function NewsPage({
 		});
 	}, [displayedArticles, searchTerm, activeTab]);
 
-	const handleLoadMore = () => {
-		setArticlesToShow((prev) => prev + 3);
-	};
+	const handleSearchChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setSearchTerm(e.target.value);
+		},
+		[]
+	);
+
+	const handleTabChange = useCallback((tabId: string) => {
+		setActiveTab(tabId);
+		setArticlesToShow(INITIAL_ARTICLES_COUNT);
+	}, []);
+
+	const handleLoadMore = useCallback(() => {
+		setArticlesToShow((prev) => prev + LOAD_MORE_COUNT);
+	}, []);
+
+	const hasMoreArticles = filteredArticles.length > articlesToShow;
 
 	return (
 		<main className="min-h-screen bg-white">
-			<div className="max-w-[1440px] mx-auto">
-				{/* Header Section */}
-				<section className="px-4 pt-12 pb-12">
-					<div className="max-w-[361px] mx-auto flex flex-col gap-6">
-						<h1 className="text-[32px] font-semibold text-center font-open-sans leading-[38.4px] text-text-dark">
+			<div className="mx-auto max-w-screen-2xl">
+				<section className="px-4 pb-12 pt-12">
+					<div className="mx-auto flex max-w-sm flex-col gap-6">
+						<h1 className="text-center font-open-sans text-4xl font-semibold leading-tight text-text-dark">
 							AKTUALNOŚCI
 						</h1>
 						<SearchInput
 							value={searchTerm}
-							onChange={(e) => setSearchTerm(e.target.value)}
+							onChange={handleSearchChange}
 							className="mx-auto"
+							aria-label="Wyszukaj artykuły"
 						/>
 					</div>
 				</section>
 
 				{featuredArticle && (
 					<section className="px-4 pb-12">
-						<div className="max-w-[361px] mx-auto flex flex-col gap-6">
-							<h2 className="text-2xl font-semibold text-center font-open-sans text-text-dark">
+						<div className="mx-auto flex max-w-sm flex-col gap-6">
+							<h2 className="text-center font-open-sans text-2xl font-semibold text-text-dark">
 								NAJNOWSZY WPIS
 							</h2>
 							<NewsCard item={featuredArticle} variant="featured" />
@@ -164,8 +202,8 @@ export default function NewsPage({
 
 				{convertedEvents.length > 0 && (
 					<section className="px-4 pb-12">
-						<div className="max-w-[361px] mx-auto flex flex-col gap-6">
-							<h2 className="text-2xl font-semibold text-center font-open-sans text-text-dark">
+						<div className="mx-auto flex max-w-sm flex-col gap-6">
+							<h2 className="text-center font-open-sans text-2xl font-semibold text-text-dark">
 								WYDARZENIA
 							</h2>
 							<div className="flex flex-col gap-14">
@@ -178,15 +216,15 @@ export default function NewsPage({
 				)}
 
 				<section className="bg-white px-4 py-8">
-					<div className="max-w-[361px] mx-auto flex flex-col gap-6">
-						<h2 className="text-2xl font-semibold text-center font-open-sans text-text-dark">
+					<div className="mx-auto flex max-w-sm flex-col gap-6">
+						<h2 className="text-center font-open-sans text-2xl font-semibold text-text-dark">
 							WSZYSTKIE ARTYKUŁY
 						</h2>
 
 						<Tabs
-							tabs={tabs}
+							tabs={[...TABS]}
 							defaultTab="all"
-							onTabChange={setActiveTab}
+							onTabChange={handleTabChange}
 							className="mb-12"
 						/>
 
@@ -196,9 +234,20 @@ export default function NewsPage({
 							))}
 						</div>
 
-						{filteredArticles.length > articlesToShow && (
-							<div className="flex justify-center mt-12">
-								<Button onClick={handleLoadMore}>Załaduj więcej</Button>
+						{hasMoreArticles && (
+							<div className="mt-12 flex justify-center">
+								<Button
+									onClick={handleLoadMore}
+									aria-label="Załaduj więcej artykułów"
+								>
+									Załaduj więcej
+								</Button>
+							</div>
+						)}
+
+						{filteredArticles.length === 0 && searchTerm && (
+							<div className="mt-8 text-center text-text-muted">
+								Nie znaleziono artykułów dla frazy: &quot;{searchTerm}&quot;
 							</div>
 						)}
 					</div>

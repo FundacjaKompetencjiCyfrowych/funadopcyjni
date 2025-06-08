@@ -51,7 +51,7 @@ async function fetchNewsData() {
 			.sort((a: { publish_date?: string }, b: { publish_date?: string }) => {
 				const dateA = new Date(a.publish_date || 0).getTime();
 				const dateB = new Date(b.publish_date || 0).getTime();
-				return dateB - dateA; // najnowsze pierwsze
+				return dateB - dateA;
 			})
 			.slice(0, 3);
 
