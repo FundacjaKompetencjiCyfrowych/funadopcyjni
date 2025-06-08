@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { SearchInput, Tabs, Button } from "@/components/atoms";
+import { SearchInput, Tabs, Button, Pagination } from "@/components/atoms";
 import NewsCard from "./NewsCard";
 import { NewsItem } from "@/types/storyblok";
 import { useRouter } from "next/navigation";
@@ -28,11 +28,14 @@ interface StoryblokStory {
 
 interface NewsPageProps {
 	readonly newsSection: readonly NewsItem[];
-	readonly articles: readonly StoryblokStory[];
+	readonly articles: readonly (StoryblokStory | NewsItem)[];
 	readonly events: readonly (StoryblokStory | NewsItem)[];
 	readonly searchResults?: readonly NewsItem[];
 	readonly isSearchMode?: boolean;
 	readonly searchTerm?: string;
+	readonly totalStories?: number;
+	readonly currentPage?: number;
+	readonly perPage?: number;
 }
 
 const TABS = [
@@ -98,6 +101,9 @@ export default function NewsPage({
 	searchResults,
 	isSearchMode,
 	searchTerm,
+	totalStories = 0,
+	currentPage = 1,
+	perPage = 9,
 }: NewsPageProps) {
 	const router = useRouter();
 	const [width] = useWindowSize();
@@ -135,18 +141,25 @@ export default function NewsPage({
 	}, [isTabletOrDesktop, isDesktop]);
 
 	const convertedArticles = useMemo(() => {
-		return articles.filter(isValidArticle).map(
-			(article, index): NewsItem => ({
-				_uid: article.uuid,
-				component: "article" as const,
-				title: article.content.title,
-				content: article.content.content || article.content.description || "",
-				image: article.content.image,
-				tags: article.content.tags || [],
-				article_number: index + 1,
-				publish_date: article.published_at || article.created_at || "",
-			})
-		);
+		// Filtrujemy tylko StoryblokStory i konwertujemy do NewsItem
+		return articles
+			.filter(
+				(article): article is StoryblokStory =>
+					"uuid" in article && "name" in article
+			)
+			.filter(isValidArticle)
+			.map(
+				(article, index): NewsItem => ({
+					_uid: article.uuid,
+					component: "article" as const,
+					title: article.content.title,
+					content: article.content.content || article.content.description || "",
+					image: article.content.image,
+					tags: article.content.tags || [],
+					article_number: index + 1,
+					publish_date: article.published_at || article.created_at || "",
+				})
+			);
 	}, [articles]);
 
 	const convertedEvents = useMemo(() => {
@@ -172,21 +185,38 @@ export default function NewsPage({
 		});
 	}, [events]);
 
-	const allArticles = useMemo(() => {
+	// Dla mobile/tablet używamy pełnej listy artykułów (newsSection + convertedArticles z StoryblokStory)
+	// Dla desktop używamy spaginowanych artykułów (articles są już NewsItem[] gotowe do użycia)
+	const allArticlesForMobileTablet = useMemo(() => {
 		return [...newsSection, ...convertedArticles];
 	}, [newsSection, convertedArticles]);
 
-	const featuredArticle = allArticles[0] ?? null;
-	const displayedArticles = allArticles.slice(1);
+	// Dla desktop - rozdzielamy NewsItem[] i StoryblokStory[]
+	const allArticlesForDesktop = useMemo(() => {
+		const newsItems = articles.filter(
+			(article): article is NewsItem =>
+				"_uid" in article && "component" in article
+		);
+		const storyblokStories = convertedArticles;
 
-	const filteredArticles = useMemo(() => {
+		// Jeśli mamy gotowe NewsItem (z paginacji), używamy ich
+		// W przeciwnym razie używamy skonwertowanych StoryblokStory
+		return newsItems.length > 0 ? newsItems : storyblokStories;
+	}, [articles, convertedArticles]);
+
+	const featuredArticle = allArticlesForMobileTablet[0] ?? null;
+	const displayedArticlesForMobileTablet = allArticlesForMobileTablet.slice(1);
+	const displayedArticlesForDesktop = allArticlesForDesktop;
+
+	// Filtrowanie artykułów dla mobile/tablet (używa pełnej listy)
+	const filteredArticlesMobileTablet = useMemo(() => {
 		if (isSearchMode) {
 			return searchResults || [];
 		}
 
 		const searchLower = searchTermLocal.toLowerCase();
 
-		return displayedArticles.filter((article) => {
+		return displayedArticlesForMobileTablet.filter((article: NewsItem) => {
 			const matchesSearch =
 				article.title.toLowerCase().includes(searchLower) ||
 				article.content.toLowerCase().includes(searchLower);
@@ -202,7 +232,38 @@ export default function NewsPage({
 			);
 		});
 	}, [
-		displayedArticles,
+		displayedArticlesForMobileTablet,
+		searchTermLocal,
+		activeTab,
+		isSearchMode,
+		searchResults,
+	]);
+
+	// Filtrowanie artykułów dla desktop (używa spaginowanych danych)
+	const filteredArticlesDesktop = useMemo(() => {
+		if (isSearchMode) {
+			return searchResults || [];
+		}
+
+		const searchLower = searchTermLocal.toLowerCase();
+
+		return displayedArticlesForDesktop.filter((article: NewsItem) => {
+			const matchesSearch =
+				article.title.toLowerCase().includes(searchLower) ||
+				article.content.toLowerCase().includes(searchLower);
+
+			if (activeTab === "all") return matchesSearch;
+			if (activeTab === "wydarzenia") return false;
+
+			return (
+				matchesSearch &&
+				article.tags?.some((tag: string) =>
+					tag.toLowerCase().includes(activeTab.toLowerCase())
+				)
+			);
+		});
+	}, [
+		displayedArticlesForDesktop,
 		searchTermLocal,
 		activeTab,
 		isSearchMode,
@@ -221,13 +282,25 @@ export default function NewsPage({
 			setActiveTab(tabId);
 			if (isDesktop) {
 				setArticlesToShow(INITIAL_ARTICLES_COUNT_DESKTOP);
+				// Dla ekranów lg+ resetuj do pierwszej strony przy zmianie taba
+				const searchParams = new URLSearchParams(window.location.search);
+				searchParams.delete("page");
+				if (debouncedSearchTerm) {
+					searchParams.set("search", debouncedSearchTerm);
+				} else {
+					searchParams.delete("search");
+				}
+				const newUrl = searchParams.toString()
+					? `/aktualnosci?${searchParams.toString()}`
+					: "/aktualnosci";
+				router.push(newUrl);
 			} else if (isTabletOrDesktop) {
 				setArticlesToShow(INITIAL_ARTICLES_COUNT_TABLET);
 			} else {
 				setArticlesToShow(INITIAL_ARTICLES_COUNT_MOBILE);
 			}
 		},
-		[isTabletOrDesktop, isDesktop]
+		[isTabletOrDesktop, isDesktop, router, debouncedSearchTerm]
 	);
 
 	const handleLoadMore = useCallback(() => {
@@ -238,7 +311,24 @@ export default function NewsPage({
 		});
 	}, [isTabletOrDesktop, isDesktop]);
 
-	const hasMoreArticles = filteredArticles.length > articlesToShow;
+	const hasMoreArticlesMobileTablet =
+		filteredArticlesMobileTablet.length > articlesToShow;
+
+	// Paginacja dla ekranów lg+
+	const totalPages = Math.ceil(totalStories / perPage);
+	const handlePageChange = useCallback(
+		(page: number) => {
+			const searchParams = new URLSearchParams(window.location.search);
+			searchParams.set("page", page.toString());
+			if (debouncedSearchTerm) {
+				searchParams.set("search", debouncedSearchTerm);
+			} else {
+				searchParams.delete("search");
+			}
+			router.push(`/aktualnosci?${searchParams.toString()}`);
+		},
+		[router, debouncedSearchTerm]
+	);
 
 	if (isSearchMode && searchTerm) {
 		return (
@@ -265,19 +355,19 @@ export default function NewsPage({
 									Wyniki wyszukiwania dla &quot;{searchTerm}&quot;
 								</h2>
 								<p className="font-open-sans font-semibold text-lg text-text-muted md:text-xl md:text-[#5C5C5C]">
-									Znaleziono {filteredArticles.length}{" "}
-									{filteredArticles.length === 1
+									Znaleziono {(searchResults || []).length}{" "}
+									{(searchResults || []).length === 1
 										? "artykuł"
-										: filteredArticles.length <= 4
+										: (searchResults || []).length <= 4
 											? "artykuły"
 											: "artykułów"}
 								</p>
 							</div>
 
-							{filteredArticles.length > 0 ? (
+							{(searchResults || []).length > 0 ? (
 								<>
 									<div className="flex md:hidden flex-col gap-14">
-										{filteredArticles.map((article) => (
+										{(searchResults || []).map((article) => (
 											<NewsCard
 												key={article._uid}
 												item={article}
@@ -286,7 +376,7 @@ export default function NewsPage({
 										))}
 									</div>
 									<div className="hidden md:grid lg:hidden grid-cols-3 gap-x-4 gap-y-12 max-w-[790px]">
-										{filteredArticles.map((article) => (
+										{(searchResults || []).map((article) => (
 											<NewsCard
 												key={article._uid}
 												item={article}
@@ -296,7 +386,7 @@ export default function NewsPage({
 									</div>
 									{/* Desktop Layout lg+ */}
 									<div className="hidden lg:grid grid-cols-3 gap-x-8 gap-y-8 w-full max-w-[1312px]">
-										{filteredArticles.map((article) => (
+										{(searchResults || []).map((article) => (
 											<NewsCard
 												key={article._uid}
 												item={article}
@@ -375,26 +465,39 @@ export default function NewsPage({
 
 						{/* Mobile Layout */}
 						<div className="flex md:hidden flex-col gap-14">
-							{filteredArticles.slice(0, articlesToShow).map((article) => (
-								<NewsCard key={article._uid} item={article} variant="article" />
-							))}
+							{filteredArticlesMobileTablet
+								.slice(0, articlesToShow)
+								.map((article) => (
+									<NewsCard
+										key={article._uid}
+										item={article}
+										variant="article"
+									/>
+								))}
 						</div>
 
 						<div className="hidden md:grid lg:hidden grid-cols-3 gap-x-4 gap-y-12 max-w-[790px]">
-							{filteredArticles.slice(0, articlesToShow).map((article) => (
-								<NewsCard key={article._uid} item={article} variant="article" />
-							))}
+							{filteredArticlesMobileTablet
+								.slice(0, articlesToShow)
+								.map((article) => (
+									<NewsCard
+										key={article._uid}
+										item={article}
+										variant="article"
+									/>
+								))}
 						</div>
 
-						{/* Desktop Layout lg+ */}
+						{/* Desktop Layout lg+ - używa paginacji zamiast "Load More" */}
 						<div className="hidden lg:grid grid-cols-3 gap-x-8 gap-y-8 w-full max-w-[1312px]">
-							{filteredArticles.slice(0, articlesToShow).map((article) => (
+							{filteredArticlesDesktop.map((article) => (
 								<NewsCard key={article._uid} item={article} variant="article" />
 							))}
 						</div>
 
-						{hasMoreArticles && (
-							<div className="flex justify-center mt-12 md:w-[361px] md:mt-0 lg:mt-12">
+						{/* Przycisk "Załaduj więcej" dla mobile i tablet */}
+						{hasMoreArticlesMobileTablet && (
+							<div className="flex justify-center mt-12 md:w-[361px] md:mt-0 lg:hidden">
 								<Button
 									onClick={handleLoadMore}
 									aria-label="Załaduj więcej artykułów"
@@ -404,7 +507,15 @@ export default function NewsPage({
 							</div>
 						)}
 
-						{filteredArticles.length === 0 && searchTermLocal && (
+						{/* Paginacja dla desktop lg+ */}
+						<Pagination
+							currentPage={currentPage}
+							totalPages={totalPages}
+							onPageChange={handlePageChange}
+							className="mt-12"
+						/>
+
+						{filteredArticlesMobileTablet.length === 0 && searchTermLocal && (
 							<div className="mt-8 text-center text-text-muted">
 								Nie znaleziono artykułów dla frazy: &quot;{searchTermLocal}
 								&quot;

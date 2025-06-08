@@ -8,6 +8,8 @@ import { NewsItem } from "@/types/storyblok";
 
 interface FetchNewsDataOptions {
 	searchTerm?: string;
+	page?: number;
+	perPage?: number;
 }
 
 interface StoryblokSearchResult {
@@ -37,7 +39,11 @@ interface StoryblokSearchResult {
 async function fetchNewsData(options: FetchNewsDataOptions = {}) {
 	try {
 		const storyblokApi = getStoryblokApi();
-		const sbParams: ISbStoriesParams = { version: "draft" };
+		const sbParams: ISbStoriesParams = {
+			version: "draft",
+			page: options.page || 1,
+			per_page: options.perPage || 25,
+		};
 
 		if (options.searchTerm) {
 			const searchParams: ISbStoriesParams = {
@@ -93,10 +99,16 @@ async function fetchNewsData(options: FetchNewsDataOptions = {}) {
 				newsSection: [],
 				articles: [],
 				events: [],
+				totalStories: 0,
+				currentPage: 1,
+				perPage: 25,
 			};
 		}
 
-		const homeData = await storyblokApi.get("cdn/stories/home", sbParams);
+		// Pobierz home page dla news section - główne źródło artykułów
+		const homeData = await storyblokApi.get("cdn/stories/home", {
+			version: "draft",
+		});
 		const newsSection = homeData?.data?.story?.content?.body?.find(
 			(blok: { component: string }) => blok.component === "news_section"
 		);
@@ -141,37 +153,24 @@ async function fetchNewsData(options: FetchNewsDataOptions = {}) {
 			})
 			.slice(0, 3);
 
-		const articles = newsArticles.filter(
-			(article: { tags?: string[]; title?: string; content?: string }) => {
-				const tags = article.tags || [];
-				const title = article.title || "";
-				const content = article.content || "";
+		const articles = newsArticles;
 
-				return !(
-					tags.some(
-						(tag: string) =>
-							tag.toLowerCase().includes("wydarzen") ||
-							tag.toLowerCase().includes("event") ||
-							tag.toLowerCase().includes("warsztaty") ||
-							tag.toLowerCase().includes("konferencja") ||
-							tag.toLowerCase().includes("spotkanie")
-					) ||
-					title.toLowerCase().includes("warsztaty") ||
-					title.toLowerCase().includes("konferencja") ||
-					title.toLowerCase().includes("spotkanie") ||
-					title.toLowerCase().includes("wydarzen") ||
-					content.toLowerCase().includes("warsztaty") ||
-					content.toLowerCase().includes("konferencja")
-				);
-			}
-		);
+		// Implementacja paginacji po stronie serwera dla artykułów
+		const currentPage = options.page || 1;
+		const perPage = options.perPage || 9;
+		const startIndex = (currentPage - 1) * perPage;
+		const endIndex = startIndex + perPage;
+		const paginatedArticles = articles.slice(startIndex, endIndex);
 
 		return {
 			newsSection: newsSection?.articles || [],
-			articles,
+			articles: paginatedArticles,
 			events,
 			isSearchMode: false,
 			searchResults: [],
+			totalStories: articles.length, // Używamy długości wszystkich artykułów do obliczania stron
+			currentPage,
+			perPage,
 		};
 	} catch (error) {
 		console.error("Błąd podczas pobierania danych ze Storyblok:", error);
@@ -181,6 +180,9 @@ async function fetchNewsData(options: FetchNewsDataOptions = {}) {
 			events: [],
 			searchResults: [],
 			isSearchMode: false,
+			totalStories: 0,
+			currentPage: 1,
+			perPage: 25,
 		};
 	}
 }
@@ -188,10 +190,11 @@ async function fetchNewsData(options: FetchNewsDataOptions = {}) {
 export default async function AktualnosciPage({
 	searchParams,
 }: {
-	searchParams: { search?: string };
+	searchParams: { search?: string; page?: string };
 }) {
 	const searchTerm = searchParams.search;
-	const data = await fetchNewsData({ searchTerm });
+	const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
+	const data = await fetchNewsData({ searchTerm, page, perPage: 9 });
 
 	return (
 		<>
