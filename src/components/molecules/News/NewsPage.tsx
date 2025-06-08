@@ -5,6 +5,7 @@ import { SearchInput, Tabs, Button } from "@/components/atoms";
 import NewsCard from "./NewsCard";
 import { NewsItem } from "@/types/storyblok";
 import { useRouter } from "next/navigation";
+import { useDebounce } from "@/hooks";
 
 interface StoryblokStory {
 	uuid: string;
@@ -98,20 +99,17 @@ export default function NewsPage({
 	const [activeTab, setActiveTab] = useState<string>("all");
 	const [articlesToShow, setArticlesToShow] = useState(INITIAL_ARTICLES_COUNT);
 
-	// Debounced search - po 500ms bezczynności uruchom wyszukiwanie
-	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			if (searchTermLocal.trim() && searchTermLocal !== searchTerm) {
-				router.push(
-					`/aktualnosci?search=${encodeURIComponent(searchTermLocal)}`
-				);
-			} else if (!searchTermLocal.trim() && searchTerm) {
-				router.push("/aktualnosci");
-			}
-		}, 500);
+	const debouncedSearchTerm = useDebounce(searchTermLocal, 500);
 
-		return () => clearTimeout(timeoutId);
-	}, [searchTermLocal, searchTerm, router]);
+	useEffect(() => {
+		if (debouncedSearchTerm.trim() && debouncedSearchTerm !== searchTerm) {
+			router.push(
+				`/aktualnosci?search=${encodeURIComponent(debouncedSearchTerm)}`
+			);
+		} else if (!debouncedSearchTerm.trim() && searchTerm) {
+			router.push("/aktualnosci");
+		}
+	}, [debouncedSearchTerm, searchTerm, router]);
 
 	const convertedArticles = useMemo(() => {
 		return articles.filter(isValidArticle).map(
@@ -206,7 +204,6 @@ export default function NewsPage({
 
 	const hasMoreArticles = filteredArticles.length > articlesToShow;
 
-	// Jeśli jesteśmy w trybie wyszukiwania, renderuj wyniki wyszukiwania
 	if (isSearchMode && searchTerm) {
 		return (
 			<main className="min-h-screen bg-white">
