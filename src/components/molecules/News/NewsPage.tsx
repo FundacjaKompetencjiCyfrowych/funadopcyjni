@@ -6,6 +6,7 @@ import NewsCard from "./NewsCard";
 import { NewsItem } from "@/types/storyblok";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "@/hooks";
+import { useWindowSize } from "@react-hook/window-size";
 
 interface StoryblokStory {
 	uuid: string;
@@ -43,8 +44,10 @@ const TABS = [
 	{ id: "inne", label: "Inne" },
 ] as const;
 
-const INITIAL_ARTICLES_COUNT = 3;
-const LOAD_MORE_COUNT = 3;
+const INITIAL_ARTICLES_COUNT_MOBILE = 3;
+const LOAD_MORE_COUNT_MOBILE = 3;
+const INITIAL_ARTICLES_COUNT_TABLET = 6;
+const LOAD_MORE_COUNT_TABLET = 6;
 
 const isValidArticle = (
 	article: StoryblokStory
@@ -86,6 +89,18 @@ const isValidEvent = (event: StoryblokStory | NewsItem): boolean => {
 	);
 };
 
+const getInitialArticlesCount = (isTablet: boolean, isDesktop: boolean) => {
+	return isTablet || isDesktop
+		? INITIAL_ARTICLES_COUNT_TABLET
+		: INITIAL_ARTICLES_COUNT_MOBILE;
+};
+
+const getLoadMoreCount = (isTablet: boolean, isDesktop: boolean) => {
+	return isTablet || isDesktop
+		? LOAD_MORE_COUNT_TABLET
+		: LOAD_MORE_COUNT_MOBILE;
+};
+
 export default function NewsPage({
 	newsSection,
 	articles,
@@ -95,9 +110,15 @@ export default function NewsPage({
 	searchTerm,
 }: NewsPageProps) {
 	const router = useRouter();
+	const [width] = useWindowSize();
+	const isTablet = width >= 768 && width < 1024;
+	const isDesktop = width >= 1024;
 	const [searchTermLocal, setSearchTermLocal] = useState(searchTerm || "");
 	const [activeTab, setActiveTab] = useState<string>("all");
-	const [articlesToShow, setArticlesToShow] = useState(INITIAL_ARTICLES_COUNT);
+
+	const [articlesToShow, setArticlesToShow] = useState(() =>
+		getInitialArticlesCount(isTablet, isDesktop)
+	);
 
 	const debouncedSearchTerm = useDebounce(searchTermLocal, 500);
 
@@ -110,6 +131,10 @@ export default function NewsPage({
 			router.push("/aktualnosci");
 		}
 	}, [debouncedSearchTerm, searchTerm, router]);
+
+	useEffect(() => {
+		setArticlesToShow(getInitialArticlesCount(isTablet, isDesktop));
+	}, [isTablet, isDesktop]);
 
 	const convertedArticles = useMemo(() => {
 		return articles.filter(isValidArticle).map(
@@ -193,42 +218,65 @@ export default function NewsPage({
 		[]
 	);
 
-	const handleTabChange = useCallback((tabId: string) => {
-		setActiveTab(tabId);
-		setArticlesToShow(INITIAL_ARTICLES_COUNT);
-	}, []);
+	const handleTabChange = useCallback(
+		(tabId: string) => {
+			setActiveTab(tabId);
+			setArticlesToShow(getInitialArticlesCount(isTablet, isDesktop));
+		},
+		[isTablet, isDesktop]
+	);
 
 	const handleLoadMore = useCallback(() => {
-		setArticlesToShow((prev) => prev + LOAD_MORE_COUNT);
-	}, []);
+		setArticlesToShow(
+			(prev: number) => prev + getLoadMoreCount(isTablet, isDesktop)
+		);
+	}, [isTablet, isDesktop]);
 
 	const hasMoreArticles = filteredArticles.length > articlesToShow;
 
 	if (isSearchMode && searchTerm) {
 		return (
 			<main className="min-h-screen bg-white">
-				<div className="mx-auto max-w-screen-2xl">
-					<section className="px-4 pb-12 pt-12">
-						<div className="mx-auto flex max-w-sm flex-col gap-6">
-							<h1 className="text-center font-open-sans text-4xl font-semibold leading-tight text-text-dark">
+				<div
+					className={`mx-auto max-w-screen-2xl ${isTablet || isDesktop ? "pt-12" : ""}`}
+				>
+					<section
+						className={`${isTablet || isDesktop ? "pb-12 pt-0 px-8" : "pb-12 pt-12 px-4"}`}
+					>
+						<div
+							className={`mx-auto flex ${isTablet || isDesktop ? "gap-[330px] max-w-none flex-row justify-between items-start" : "gap-6 max-w-sm flex-col"}`}
+						>
+							<h1
+								className={`font-open-sans font-semibold leading-tight text-text-dark ${isTablet || isDesktop ? "text-[32px] text-left" : "text-4xl text-center"}`}
+							>
 								AKTUALNOŚCI
 							</h1>
 							<SearchInput
 								value={searchTermLocal}
 								onChange={handleSearchChange}
-								className="mx-auto"
+								className={isTablet || isDesktop ? "" : "mx-auto"}
 								aria-label="Wyszukaj artykuły"
 							/>
 						</div>
 					</section>
 
-					<section className="px-4 pb-12">
-						<div className="mx-auto flex max-w-sm flex-col gap-6">
-							<div className="text-center">
-								<h2 className="font-open-sans text-2xl font-semibold text-text-dark">
+					<section
+						className={`pb-12 ${isTablet || isDesktop ? "px-8" : "px-4"}`}
+					>
+						<div
+							className={`mx-auto flex flex-col ${isTablet || isDesktop ? "gap-8 max-w-none items-center" : "gap-6 max-w-sm"}`}
+						>
+							<div
+								className={`flex flex-col ${isTablet || isDesktop ? "gap-4 text-center" : "gap-2 text-center"}`}
+							>
+								<h2
+									className={`font-open-sans font-semibold text-text-dark ${isTablet || isDesktop ? "text-2xl" : "text-xl"}`}
+								>
 									Wyniki wyszukiwania dla &quot;{searchTerm}&quot;
 								</h2>
-								<p className="mt-2 font-nunito text-lg font-bold text-text-muted">
+								<p
+									className={`font-open-sans font-semibold ${isTablet || isDesktop ? "text-xl text-[#5C5C5C]" : "text-lg text-text-muted"}`}
+								>
 									Znaleziono {filteredArticles.length}{" "}
 									{filteredArticles.length === 1
 										? "artykuł"
@@ -239,15 +287,27 @@ export default function NewsPage({
 							</div>
 
 							{filteredArticles.length > 0 ? (
-								<div className="flex flex-col gap-14">
-									{filteredArticles.map((article) => (
-										<NewsCard
-											key={article._uid}
-											item={article}
-											variant="article"
-										/>
-									))}
-								</div>
+								isTablet || isDesktop ? (
+									<div className="grid grid-cols-3 gap-x-4 gap-y-12 max-w-[790px]">
+										{filteredArticles.map((article) => (
+											<NewsCard
+												key={article._uid}
+												item={article}
+												variant="article"
+											/>
+										))}
+									</div>
+								) : (
+									<div className="flex flex-col gap-14">
+										{filteredArticles.map((article) => (
+											<NewsCard
+												key={article._uid}
+												item={article}
+												variant="article"
+											/>
+										))}
+									</div>
+								)
 							) : (
 								<div className="mt-8 text-center text-text-muted">
 									Nie znaleziono artykułów dla frazy: &quot;{searchTerm}&quot;
@@ -262,25 +322,39 @@ export default function NewsPage({
 
 	return (
 		<main className="min-h-screen bg-white">
-			<div className="mx-auto max-w-screen-2xl">
-				<section className="px-4 pb-12 pt-12">
-					<div className="mx-auto flex max-w-sm flex-col gap-6">
-						<h1 className="text-center font-open-sans text-4xl font-semibold leading-tight text-text-dark">
+			<div
+				className={`mx-auto max-w-screen-2xl ${isTablet || isDesktop ? "pt-12" : ""}`}
+			>
+				<section
+					className={`${isTablet || isDesktop ? "pb-12 pt-0 px-8" : "pb-12 pt-12 px-4"}`}
+				>
+					<div
+						className={`mx-auto flex ${isTablet || isDesktop ? "gap-[330px] max-w-none flex-row justify-between items-start" : "gap-6 max-w-sm flex-col"}`}
+					>
+						<h1
+							className={`font-open-sans font-semibold leading-tight text-text-dark ${isTablet || isDesktop ? "text-[32px] text-left" : "text-4xl text-center"}`}
+						>
 							AKTUALNOŚCI
 						</h1>
 						<SearchInput
 							value={searchTermLocal}
 							onChange={handleSearchChange}
-							className="mx-auto"
+							className={isTablet || isDesktop ? "" : "mx-auto"}
 							aria-label="Wyszukaj artykuły"
 						/>
 					</div>
 				</section>
 
 				{featuredArticle && (
-					<section className="px-4 pb-12">
-						<div className="mx-auto flex max-w-sm flex-col gap-6">
-							<h2 className="text-center font-open-sans text-2xl font-semibold text-text-dark">
+					<section
+						className={`pb-12 ${isTablet || isDesktop ? "px-8" : "px-4"}`}
+					>
+						<div
+							className={`mx-auto flex flex-col ${isTablet || isDesktop ? "gap-12 max-w-none items-start" : "gap-6 max-w-sm items-center"}`}
+						>
+							<h2
+								className={`font-open-sans font-semibold text-text-dark ${isTablet || isDesktop ? "text-2xl text-left" : "text-2xl text-center"}`}
+							>
 								NAJNOWSZY WPIS
 							</h2>
 							<NewsCard item={featuredArticle} variant="featured" />
@@ -289,12 +363,20 @@ export default function NewsPage({
 				)}
 
 				{convertedEvents.length > 0 && (
-					<section className="px-4 pb-12">
-						<div className="mx-auto flex max-w-sm flex-col gap-6">
-							<h2 className="text-center font-open-sans text-2xl font-semibold text-text-dark">
+					<section
+						className={`pb-12 ${isTablet || isDesktop ? "px-8" : "px-4"}`}
+					>
+						<div
+							className={`mx-auto flex flex-col ${isTablet || isDesktop ? "gap-8 max-w-[770px] items-center" : "gap-6 max-w-sm"}`}
+						>
+							<h2
+								className={`font-open-sans font-semibold text-text-dark ${isTablet || isDesktop ? "text-2xl text-center" : "text-2xl text-center"}`}
+							>
 								WYDARZENIA
 							</h2>
-							<div className="flex flex-col gap-14">
+							<div
+								className={`flex flex-col ${isTablet || isDesktop ? "gap-14 w-full" : "gap-14"}`}
+							>
 								{convertedEvents.map((event) => (
 									<NewsCard key={event._uid} item={event} variant="event" />
 								))}
@@ -303,9 +385,15 @@ export default function NewsPage({
 					</section>
 				)}
 
-				<section className="bg-white px-4 py-8">
-					<div className="mx-auto flex max-w-sm flex-col gap-6">
-						<h2 className="text-center font-open-sans text-2xl font-semibold text-text-dark">
+				<section
+					className={`bg-white ${isTablet || isDesktop ? "py-4 px-4" : "py-8 px-4"}`}
+				>
+					<div
+						className={`mx-auto flex flex-col ${isTablet || isDesktop ? "gap-8 max-w-none items-center" : "gap-6 max-w-sm"}`}
+					>
+						<h2
+							className={`font-open-sans font-semibold text-text-dark ${isTablet || isDesktop ? "text-2xl text-center" : "text-2xl text-center"}`}
+						>
 							WSZYSTKIE ARTYKUŁY
 						</h2>
 
@@ -313,17 +401,35 @@ export default function NewsPage({
 							tabs={[...TABS]}
 							defaultTab="all"
 							onTabChange={handleTabChange}
-							className="mb-12"
+							className={isTablet || isDesktop ? "w-[762px]" : "mb-12"}
 						/>
 
-						<div className="flex flex-col gap-14">
-							{filteredArticles.slice(0, articlesToShow).map((article) => (
-								<NewsCard key={article._uid} item={article} variant="article" />
-							))}
-						</div>
+						{isTablet || isDesktop ? (
+							<div className="grid grid-cols-3 gap-x-4 gap-y-12 max-w-[790px]">
+								{filteredArticles.slice(0, articlesToShow).map((article) => (
+									<NewsCard
+										key={article._uid}
+										item={article}
+										variant="article"
+									/>
+								))}
+							</div>
+						) : (
+							<div className="flex flex-col gap-14">
+								{filteredArticles.slice(0, articlesToShow).map((article) => (
+									<NewsCard
+										key={article._uid}
+										item={article}
+										variant="article"
+									/>
+								))}
+							</div>
+						)}
 
 						{hasMoreArticles && (
-							<div className="mt-12 flex justify-center">
+							<div
+								className={`${isTablet || isDesktop ? "w-[361px]" : "mt-12"} flex justify-center`}
+							>
 								<Button
 									onClick={handleLoadMore}
 									aria-label="Załaduj więcej artykułów"

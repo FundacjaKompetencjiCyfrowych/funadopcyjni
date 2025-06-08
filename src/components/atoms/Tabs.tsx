@@ -26,7 +26,8 @@ const Tabs = ({ tabs, defaultTab, onTabChange, className }: TabsProps) => {
 	return (
 		<div
 			className={cn(
-				"flex flex-wrap gap-6 border-b border-gray-medium",
+				"flex justify-between flex-wrap border-b border-gray-medium",
+				"gap-6",
 				className
 			)}
 		>

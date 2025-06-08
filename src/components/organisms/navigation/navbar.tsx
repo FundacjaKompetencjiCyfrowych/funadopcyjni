@@ -44,7 +44,7 @@ export default function Navbar() {
 										height={isMobile ? 36 : 64}
 										className="h-9 w-9 sm:h-12 sm:w-12 md:h-10 md:w-10 lg:h-16 lg:w-16"
 									/>
-									<p className="font-nunito text-sm font-semibold text-primary-text sm:text-base md:text-base md:font-bold lg:text-xl lg:font-semibold">
+									<p className="font-nunito text-sm font-semibold text-primary-text sm:text-base md:text-base md:font-bold lg:text-xl lg:font-semibold whitespace-nowrap">
 										Fundacja Adopcyjni
 									</p>
 								</Link>
