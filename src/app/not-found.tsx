@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Navbar from "@/components/organisms/navigation/navbar";
+import Navbar from "@/components/organisms/Navigation/Navbar";
 
 export default function NotFound() {
 	return (

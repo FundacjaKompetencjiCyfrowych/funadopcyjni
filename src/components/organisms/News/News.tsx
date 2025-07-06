@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/atoms";
 import { NewsItem } from "@/types/storyblok";
-import NewsCard from "./NewsCard";
+import { NewsCard } from "@/components/molecules/NewsCard";
 
 interface NewsProps {
 	blok?: {

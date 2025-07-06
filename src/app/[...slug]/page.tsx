@@ -2,7 +2,7 @@ import { getStoryblokApi } from "@storyblok/react/rsc";
 import { ISbStoriesParams } from "@storyblok/react";
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
-import Navbar from "@/components/organisms/navigation/navbar";
+import Navbar from "@/components/organisms/Navigation/Navbar";
 
 const StoryblokComponent = dynamic(() =>
 	import("@storyblok/react").then((mod) => mod.StoryblokComponent)

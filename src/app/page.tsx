@@ -1,16 +1,15 @@
-// import Image from "next/image";
-import Navbar from "@/components/organisms/navigation/navbar";
+import Navbar from "@/components/organisms/Navigation/Navbar";
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import { ISbStoriesParams } from "@storyblok/react";
 import dynamic from "next/dynamic";
-import { CarouselMain } from "@/components/molecules/Carousel/CarouselMain";
-import { AboutUs } from "@/components/molecules/AboutUs";
-import { HowWeHelp } from "@/components/molecules/HowWeHelp";
-import { MakeDonation } from "@/components/molecules/MakeDonation";
-import { HowYouCanHelp } from "@/components/molecules/HowYouCanHelp";
-import { TheySupport } from "@/components/molecules/TheySupport";
-import { Footer } from "@/components/molecules/Footer";
-import { News } from "@/components/molecules/News";
+import { CarouselMain } from "@/components/organisms/Carousel/CarouselMain";
+import { AboutUs } from "@/components/organisms/AboutUs";
+import { HowWeHelp } from "@/components/organisms/HowWeHelp";
+import { MakeDonation } from "@/components/organisms/MakeDonation";
+import { HowYouCanHelp } from "@/components/organisms/HowYouCanHelp";
+import { TheySupport } from "@/components/organisms/TheySupport";
+import { Footer } from "@/components/organisms/Footer";
+import { News } from "@/components/organisms/News";
 
 const StoryblokComponent = dynamic(() =>
 	import("@storyblok/react").then((mod) => mod.StoryblokComponent)

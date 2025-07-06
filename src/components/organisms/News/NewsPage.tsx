@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { SearchInput, Tabs, Button, Pagination } from "@/components/atoms";
-import NewsCard from "./NewsCard";
+import { NewsCard } from "@/components/molecules/NewsCard";
 import { NewsItem } from "@/types/storyblok";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "@/hooks";

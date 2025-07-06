@@ -1,5 +1,5 @@
 import { storyblokEditable } from "@storyblok/react/rsc";
-import { CarouselMain } from "@/components/molecules/Carousel/CarouselMain";
+import { CarouselMain } from "@/components/organisms/Carousel/CarouselMain";
 
 interface CarouselSlide {
 	image: {

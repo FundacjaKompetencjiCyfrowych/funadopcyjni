@@ -1,5 +1,5 @@
 import { storyblokEditable } from "@storyblok/react/rsc";
-import AboutUs from "@/components/molecules/AboutUs/AboutUs";
+import AboutUs from "@/components/organisms/AboutUs/AboutUs";
 
 interface AboutUsStoryblokProps {
 	blok: {

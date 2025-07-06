@@ -1,9 +1,9 @@
 import React from "react";
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import { ISbStoriesParams } from "@storyblok/react";
-import Navbar from "@/components/organisms/navigation/navbar";
-import { Footer } from "@/components/molecules/Footer";
-import { NewsPage } from "@/components/molecules/News";
+import Navbar from "@/components/organisms/Navigation/Navbar";
+import { Footer } from "@/components/organisms/Footer";
+import { NewsPage } from "@/components/organisms/News";
 import { NewsItem } from "@/types/storyblok";
 
 interface FetchNewsDataOptions {

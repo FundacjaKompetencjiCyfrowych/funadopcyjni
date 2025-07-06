@@ -1,5 +1,5 @@
 import { storyblokEditable } from "@storyblok/react/rsc";
-import { News } from "@/components/molecules/News";
+import { News } from "@/components/organisms/News";
 import { NewsBlockStoryblok } from "@/types/storyblok";
 
 interface NewsStoryblokProps {

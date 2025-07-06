@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-/* @import "../node_modules/@my-company/ui-lib"; */
-
 @theme {
 	--color-primary: #ffb833;
 	--color-primary-hover: #ffa90a;
