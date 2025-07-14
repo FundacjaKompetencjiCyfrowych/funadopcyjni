@@ -1,4 +1,3 @@
-import Navbar from '@/components/organisms/Navigation/Navbar';
 import { getStoryblokApi } from '@storyblok/react/rsc';
 import { ISbStoriesParams } from '@storyblok/react';
 import { CarouselMain } from '@/components/organisms/Carousel/CarouselMain';
@@ -7,7 +6,6 @@ import { HowWeHelp } from '@/components/organisms/HowWeHelp';
 import { MakeDonation } from '@/components/organisms/MakeDonation';
 import { HowYouCanHelp } from '@/components/organisms/HowYouCanHelp';
 import { TheySupport } from '@/components/organisms/TheySupport';
-import { Footer } from '@/components/organisms/Footer';
 import { News } from '@/components/organisms/News';
 
 interface StoryblokBlock {
@@ -46,8 +44,6 @@ export default async function Home() {
 
   return (
     <>
-      <Navbar />
-
       <div className="flex flex-col gap-14 md:gap-0 lg:gap-0">
         {carouselComponent && <CarouselMain blok={carouselComponent} />}
 
@@ -62,8 +58,6 @@ export default async function Home() {
 
         <TheySupport />
       </div>
-
-      <Footer />
     </>
   );
 }
