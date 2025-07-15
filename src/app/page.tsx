@@ -1,5 +1,4 @@
-import { getStoryblokApi } from '@storyblok/react/rsc';
-import { ISbStoriesParams } from '@storyblok/react';
+import { getStoryblokApi } from '@/lib/storyblok';
 import { CarouselMain } from '@/components/organisms/Carousel/CarouselMain';
 import { AboutUs } from '@/components/organisms/AboutUs';
 import { HowWeHelp } from '@/components/organisms/HowWeHelp';
@@ -17,10 +16,8 @@ interface StoryblokBlock {
 
 async function fetchData() {
   const storyblokApi = getStoryblokApi();
-  const sbParams: ISbStoriesParams = { version: 'draft' };
-
   try {
-    return await storyblokApi.get('cdn/stories/home', sbParams);
+    return await storyblokApi.get('cdn/stories/home', { version: 'draft' });
   } catch (error) {
     console.error('Błąd podczas pobierania danych ze Storyblok:', error);
     return null;

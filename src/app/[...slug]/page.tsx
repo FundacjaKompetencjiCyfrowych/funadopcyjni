@@ -1,16 +1,11 @@
-import { getStoryblokApi } from '@storyblok/react/rsc';
+import { getStoryblokApi } from '@/lib/storyblok';
 import { ISbStoriesParams } from '@storyblok/react';
 import { notFound } from 'next/navigation';
-import dynamic from 'next/dynamic';
-
-const StoryblokComponent = dynamic(() =>
-  import('@storyblok/react').then((mod) => mod.StoryblokComponent)
-);
+import { StoryblokServerComponent } from '@storyblok/react/rsc';
 
 async function fetchData(slug: string) {
   const storyblokApi = getStoryblokApi();
   const sbParams: ISbStoriesParams = { version: 'draft' };
-
   try {
     return await storyblokApi.get(`cdn/stories/${slug}`, sbParams);
   } catch (error) {
@@ -21,7 +16,6 @@ async function fetchData(slug: string) {
     return null;
   }
 }
-
 export async function generateMetadata({
   params,
 }: {
@@ -29,16 +23,13 @@ export async function generateMetadata({
 }) {
   const slug = params.slug.join('/');
   const data = await fetchData(slug);
-
   if (!data || !data.data || !data.data.story) {
     return {
       title: 'Nie znaleziono strony - Fundacja Adopcyjni',
       description: 'Przepraszamy, strona której szukasz nie istnieje.',
     };
   }
-
   const story = data.data.story;
-
   return {
     title: story.name + ' - Fundacja Adopcyjni',
     description:
@@ -46,7 +37,6 @@ export async function generateMetadata({
       'Wspieramy rodziny na każdym etapie adopcji.',
   };
 }
-
 export default async function DynamicPage({
   params,
 }: {
@@ -54,15 +44,14 @@ export default async function DynamicPage({
 }) {
   const slug = params.slug.join('/');
   const data = await fetchData(slug);
-
   if (!data || !data.data || !data.data.story) {
     notFound();
   }
-
   return (
     <>
       <div className="container mx-auto px-4 py-8">
-        <StoryblokComponent blok={data.data.story.content} />
+        {/* <StoryblokServerComponent blok={data.data.story.content} /> */}
+        Test
       </div>
     </>
   );

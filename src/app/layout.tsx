@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
 import { Nunito, Open_Sans } from 'next/font/google';
 import '@/styles/globals.css';
-import { storyblokInit, apiPlugin } from '@storyblok/react/rsc';
-import MainCarouselStoryblok from '@/components/storyblok/MainCarouselStoryblok';
-import AboutUsStoryblok from '@/components/storyblok/AboutUsStoryblok';
-import NewsStoryblok from '@/components/storyblok/NewsStoryblok';
+import StoryblokProvider from '@/components/storyblok/StoryblokProvider';
 import Navbar from '@/components/organisms/Navigation/Navbar';
 import Footer from '@/components/organisms/Footer/Footer';
 
@@ -29,28 +26,20 @@ export const metadata: Metadata = {
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
 };
 
-storyblokInit({
-  accessToken: process.env.STORYBLOK_ACCESS_TOKEN,
-  use: [apiPlugin],
-  components: {
-    main_carousel: MainCarouselStoryblok,
-    about_us: AboutUsStoryblok,
-    news_section: NewsStoryblok,
-  },
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${nunito.variable} ${openSans.variable}`}>
-      <body className="font-sans antialiased flex flex-col min-h-[100vh]">
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
+    <StoryblokProvider>
+      <html lang="pl" className={`${nunito.variable} ${openSans.variable}`}>
+        <body className="font-sans antialiased flex flex-col min-h-[100vh]">
+          <Navbar />
+          {children}
+          <Footer />
+        </body>
+      </html>
+    </StoryblokProvider>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getStoryblokApi } from '@storyblok/react/rsc';
+import { getStoryblokApi } from '@/lib/storyblok';
 import { ISbStoriesParams } from '@storyblok/react';
 import { NewsPage } from '@/components/organisms/News';
 import { NewsItem } from '@/types/storyblok';
