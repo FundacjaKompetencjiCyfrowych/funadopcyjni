@@ -10,7 +10,6 @@ const nextConfig = {
 		];
 	},
 	images: {
-		domains: ["a.storyblok.com"],
 		remotePatterns: [
 			{
 				protocol: "https",
