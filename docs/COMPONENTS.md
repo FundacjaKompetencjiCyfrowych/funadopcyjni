@@ -398,25 +398,21 @@ Wrapper component for news section with CMS integration.
 ### Component Development Guidelines
 
 1. **TypeScript First**
-
    - Define interfaces for all props
    - Use strict typing for CMS data
    - Leverage union types for variants
 
 2. **Responsive Design**
-
    - Mobile-first approach
    - Test on all breakpoints
    - Use Tailwind's responsive utilities
 
 3. **Performance**
-
    - Lazy load images with Next.js Image
    - Use `useMemo` and `useCallback` where appropriate
    - Implement proper loading states
 
 4. **Accessibility**
-
    - Include ARIA labels
    - Ensure keyboard navigation
    - Provide alt text for images
@@ -495,21 +491,18 @@ export default CMSComponent;
 ### Manual Testing Checklist
 
 1. **Visual Testing**
-
    - [ ] Component renders correctly
    - [ ] Responsive design works on all breakpoints
    - [ ] Hover states function properly
    - [ ] Loading states display correctly
 
 2. **Functionality Testing**
-
    - [ ] All interactive elements work
    - [ ] Form submissions handle correctly
    - [ ] Navigation functions properly
    - [ ] CMS data displays correctly
 
 3. **Accessibility Testing**
-
    - [ ] Keyboard navigation works
    - [ ] Screen reader compatibility
    - [ ] Color contrast meets standards

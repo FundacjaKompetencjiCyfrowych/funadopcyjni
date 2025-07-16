@@ -259,13 +259,11 @@ storyblokInit({
 #### Content Types
 
 1. **Main Carousel**
-
    - Slides with images, titles, descriptions, and CTAs
    - Auto-play configuration
    - Navigation controls
 
 2. **About Us**
-
    - Title and description
    - Featured image
    - Call-to-action button
@@ -424,13 +422,11 @@ pnpm start
 ### Development Guidelines
 
 1. **Code Style**
-
    - Follow ESLint configuration
    - Use Prettier for formatting
    - Write meaningful commit messages
 
 2. **Component Development**
-
    - Follow atomic design principles
    - Ensure TypeScript compliance
    - Include responsive design
