@@ -1,14 +1,14 @@
 import { apiPlugin, storyblokInit } from "@storyblok/react/rsc";
-import MainCarouselStoryblok from "@/components/storyblok/MainCarouselStoryblok";
-import AboutUsStoryblok from "@/components/storyblok/AboutUsStoryblok";
-import NewsStoryblok from "@/components/storyblok/NewsStoryblok";
+import { CarouselMain } from "@/components/sections/CarouselMain";
+import { AboutUs } from "@/components/sections/AboutUs";
+import { News } from "@/components/sections/News";
 
 export const getStoryblokApi = storyblokInit({
 	accessToken: process.env.NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN,
 	use: [apiPlugin],
 	components: {
-		main_carousel: MainCarouselStoryblok,
-		about_us: AboutUsStoryblok,
-		news_section: NewsStoryblok,
+		main_carousel: CarouselMain,
+		about_us: AboutUs,
+		news_section: News,
 	},
 });

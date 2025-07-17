@@ -1,11 +1,11 @@
 import { getStoryblokApi } from "@/lib/storyblok";
-import { CarouselMain } from "@/components/organisms/Carousel/CarouselMain";
-import { AboutUs } from "@/components/organisms/AboutUs";
-import { HowWeHelp } from "@/components/organisms/HowWeHelp";
-import { MakeDonation } from "@/components/organisms/MakeDonation";
-import { HowYouCanHelp } from "@/components/organisms/HowYouCanHelp";
-import { TheySupport } from "@/components/organisms/TheySupport";
-import { News } from "@/components/organisms/News";
+import { CarouselMain } from "@/components/sections/CarouselMain";
+import { AboutUs } from "@/components/sections/AboutUs";
+import { HowWeHelp } from "@/components/sections/HowWeHelp";
+import { MakeDonation } from "@/components/sections/MakeDonation";
+import { HowYouCanHelp } from "@/components/sections/HowYouCanHelp";
+import { TheySupport } from "@/components/sections/TheySupport";
+import { News } from "@/components/sections/News";
 
 interface StoryblokBlock {
 	_uid: string;

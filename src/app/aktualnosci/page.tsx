@@ -1,7 +1,7 @@
 import React from "react";
 import { getStoryblokApi } from "@/lib/storyblok";
 import { ISbStoriesParams } from "@storyblok/react";
-import { NewsPage } from "@/components/organisms/News";
+import { NewsPage } from "@/components/sections/NewsPage";
 import { NewsItem } from "@/types/storyblok";
 
 interface FetchNewsDataOptions {

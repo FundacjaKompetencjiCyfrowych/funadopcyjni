@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Nunito, Open_Sans } from "next/font/google";
 import "@/styles/globals.css";
-import StoryblokProvider from "@/components/storyblok/StoryblokProvider";
-import Navbar from "@/components/organisms/Navigation/Navbar";
-import Footer from "@/components/organisms/Footer/Footer";
+import { StoryblokProvider } from "@/components/providers/StoryblokProvider";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 const nunito = Nunito({
 	variable: "--font-nunito",
