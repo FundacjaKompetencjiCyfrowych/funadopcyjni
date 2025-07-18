@@ -1,58 +1,40 @@
-import { getStoryblokApi } from "@/lib/storyblok";
-import { CarouselMain } from "@/components/sections/CarouselMain";
-import { AboutUs } from "@/components/sections/AboutUs";
+import { getStoryblokApi, findBlok } from "@/lib/storyblok";
+import { StoryblokServerComponent } from "@storyblok/react/rsc";
+import { AboutUsBlok } from "@/components/sections/AboutUs";
+import { CarouselMainBlok } from "@/components/sections/CarouselMain";
+import { NewsBlok } from "@/components/sections/News";
 import { HowWeHelp } from "@/components/sections/HowWeHelp";
 import { MakeDonation } from "@/components/sections/MakeDonation";
 import { HowYouCanHelp } from "@/components/sections/HowYouCanHelp";
 import { TheySupport } from "@/components/sections/TheySupport";
-import { News } from "@/components/sections/News";
+import type { Story } from "@/types/storyblok";
 
-interface StoryblokBlock {
-	_uid: string;
-	component: string;
-	slides?: unknown[];
-	[key: string]: unknown;
-}
+type HomePageBlock = CarouselMainBlok | AboutUsBlok | NewsBlok;
 
-async function fetchData() {
+export async function fetchHomePage(): Promise<Story<HomePageBlock>> {
 	const storyblokApi = getStoryblokApi();
-	try {
-		return await storyblokApi.get("cdn/stories/home", { version: "draft" });
-	} catch (error) {
-		console.error("Błąd podczas pobierania danych ze Storyblok:", error);
-		return null;
-	}
+	return await storyblokApi.get("cdn/stories/home", { version: "draft" });
 }
 
-export default async function Home() {
-	const storyblokData = await fetchData();
+export default async function HomePage() {
+	const { data } = await fetchHomePage();
 
-	const carouselComponent = storyblokData?.data?.story?.content?.body?.find(
-		(blok: StoryblokBlock) => blok.component === "main_carousel"
-	);
-
-	const aboutUsComponent = storyblokData?.data?.story?.content?.body?.find(
-		(blok: StoryblokBlock) => blok.component === "about_us"
-	);
-
-	const newsComponent = storyblokData?.data?.story?.content?.body?.find(
-		(blok: StoryblokBlock) => blok.component === "news_section"
-	);
+	const carousel = findBlok<CarouselMainBlok>(data, "main_carousel");
+	const aboutUs = findBlok<AboutUsBlok>(data, "about_us");
+	const news = findBlok<NewsBlok>(data, "news_section");
 
 	return (
 		<>
 			<div className="flex flex-col gap-14 md:gap-0 lg:gap-0">
-				{carouselComponent && <CarouselMain blok={carouselComponent} />}
-
-				{aboutUsComponent && <AboutUs blok={aboutUsComponent} />}
-
+				{/* {data.story.content.body.map((blok: HomePageBlock) => {
+					return <StoryblokServerComponent blok={blok} key={blok._uid} />;
+				})} */}
+				<StoryblokServerComponent blok={carousel} />
+				<StoryblokServerComponent blok={aboutUs} />
 				<HowWeHelp />
-
 				<MakeDonation />
-
-				{newsComponent && <News blok={newsComponent} />}
+				<StoryblokServerComponent blok={news} />
 				<HowYouCanHelp />
-
 				<TheySupport />
 			</div>
 		</>

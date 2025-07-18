@@ -1,3 +1,9 @@
+import { ISbStoryData } from "@storyblok/react";
+
+export type Story<T> = {
+	data: { story: ISbStoryData & { content: { data: T[] } } };
+};
+
 export interface StoryblokImage {
 	filename: string;
 	alt?: string;

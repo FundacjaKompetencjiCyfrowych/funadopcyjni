@@ -4,29 +4,28 @@ import React, { useCallback, useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { storyblokEditable } from "@storyblok/react";
+import { storyblokEditable, SbBlokData } from "@storyblok/react/rsc";
 import { Button } from "@/components/ui/Button";
 
-interface CarouselSlide {
-	image: {
-		filename: string;
-		alt?: string;
-	};
-	title: string;
-	description: string;
-	buttonText: string;
-	link: {
-		url: string;
-	};
+export interface CarouselMainBlok extends SbBlokData {
+	autoplay?: boolean;
+	autoplayDelay?: number;
+	slides: {
+		image: {
+			filename: string;
+			alt?: string;
+		};
+		title: string;
+		description: string;
+		buttonText: string;
+		link: {
+			url: string;
+		};
+	}[];
 }
 
 interface CarouselMainProps {
-	blok: {
-		_uid: string;
-		autoplay?: boolean;
-		autoplayDelay?: number;
-		slides: CarouselSlide[];
-	};
+	blok: CarouselMainBlok;
 	className?: string;
 }
 

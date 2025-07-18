@@ -4,13 +4,15 @@ import React from "react";
 import { Button } from "@/components/ui/Button";
 import { NewsItem } from "@/types/storyblok";
 import { NewsCard } from "@/components/ui/NewsCard";
+import { SbBlokData } from "@storyblok/react/rsc";
+
+export interface NewsBlok extends SbBlokData {
+	component: "news_section";
+	articles: NewsItem[];
+}
 
 interface NewsProps {
-	blok?: {
-		_uid: string;
-		component: string;
-		articles: NewsItem[];
-	};
+	blok: NewsBlok;
 }
 
 export function News({ blok }: NewsProps) {

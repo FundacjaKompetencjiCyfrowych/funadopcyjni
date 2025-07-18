@@ -2,19 +2,20 @@
 
 import React from "react";
 import Image from "next/image";
-import { storyblokEditable } from "@storyblok/react";
+import { SbBlokData, storyblokEditable } from "@storyblok/react/rsc";
 import { Button } from "@/components/ui/Button";
 
-interface AboutUsProps {
-	blok: {
-		_uid: string;
-		title: string;
-		description: string;
-		image: {
-			filename: string;
-			alt?: string;
-		};
+export interface AboutUsBlok extends SbBlokData {
+	title: string;
+	description: string;
+	image: {
+		filename: string;
+		alt?: string;
 	};
+}
+
+interface AboutUsProps {
+	blok: AboutUsBlok;
 }
 
 export function AboutUs({ blok }: AboutUsProps) {
